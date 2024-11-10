@@ -6,7 +6,7 @@ tolerance = 0.5;       // Keep same
 led_size = 5;         // 5mm square LED cutouts
 
 // Updated Base Parameters
-base_width = ;      // Optimized smaller base
+base_width = 82;      // Optimized smaller base
 base_length = 50;     // Adjusted proportionally
 base_height = 15;     // Increased by 25% from 25mm
 
