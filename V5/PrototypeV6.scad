@@ -9,13 +9,13 @@ led_size = 5;         // 5mm square LED cutouts
 base_width = 66;      // Optimized smaller base
 base_length = 38;     // Adjusted proportionally
 base_height = 15;     // Increased by 25% from 25mm
-
+base_space = 4;
 // Updated 7-Segment Display Parameters
 segment_h_length = 24;    // Increased horizontal length for wider number
 segment_width = 6;        // Keep wider segments
 
 // Add diffuser parameters
-diffuser_height = 1;
+diffuser_height = .28;
 
 // Define LED positions globally
 led1 = [0, -3.0 * led_spacing];  // LED1
@@ -104,7 +104,7 @@ module segment(length, width) {
 
 // Diffuser layer module
 module diffuser_layer() {
-    translate([0, 0, base_height/2 - .5])  // Changed to sit directly on base
+    translate([0, 0, (base_height/2) - diffuser_height/2])  // Changed to sit directly on base
         cube([base_width, base_length, diffuser_height], center=true);
 }
 
@@ -115,6 +115,36 @@ module diffuser_layer() {
 // //    diffuser_layer();
 // }
    
+module side_cut(side = "left") {
+    color("Green", alpha=0.9);
+    if (side == "left") {
+    rotate([90, 0, 90])
+    translate([0, 0, -base_width/2])
+        linear_extrude(height=base_width)
+            polygon(
+            points=[
+                [(strip_width/2)+base_space,0 - base_height/2],
+                [0+base_length/2,0 - base_height/2],
+                [0+base_length/2, base_height/2]
+                ], 
+            paths=[[0,1,2]]
+        );
+    } else if (side == "right") {
+        rotate([90, 0, 90])
+        translate([0, 0, -base_width/2])
+            linear_extrude(height=base_width)
+                polygon(
+                points=[
+                    [(-strip_width/2)-base_space,0 - base_height/2],
+                    [0-base_length/2,0 - base_height/2],
+                    [0-base_length/2, base_height/2]
+                    ], 
+                paths=[[0,1,2]]
+            );
+    }
+}
+
+
 // New module for the intersection shape
 module intersection_layer() {
         color("Red", alpha=0.9)  // Semi-transparent to visualize
@@ -127,6 +157,18 @@ module intersection_layer() {
 
 // union(){
 // Replace the final union() with:
-//intersection_layer();
-base();
+// color("Green", alpha=0.9) {
+// side_cut("left");
+// side_cut("right");
 // }
+ color("Yellow", alpha=0.9) {
+    difference() {
+        base();
+        side_cut("left");
+        side_cut("right");
+    }
+ }
+
+// intersection_layer();
+
+
