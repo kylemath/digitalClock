@@ -7,33 +7,28 @@ led_size = 5;         // 5mm square LED cutouts
 
 // Updated Base Parameters
 base_width = 66;      // Optimized smaller base
-base_length = 38;     // Adjusted proportionally
+base_length = 14;     // Adjusted proportionally
 base_height = 15;     // Increased by 25% from 25mm
 base_space = 4;
 // Updated 7-Segment Display Parameters
-segment_h_length = 24;    // Increased horizontal length for wider number
-segment_width = 6;        // Keep wider segments
+segment_h_length = 6;    // Increased horizontal length for wider number
+segment_width = 8;        // Keep wider segments
 
 // Add diffuser parameters
 diffuser_height = .28;
 
 // Define LED positions globally
-led1 = [0, -3.0 * led_spacing];  // LED1
-led2 = [0,-2.0 * led_spacing];  // LED2
-led3 = [0,-1.0 * led_spacing];  // LED3
-led4 = [0,0.0 * led_spacing];   // LED4 - Center LED
-led5 = [0,1.0 * led_spacing];   // LED5
-led6 = [0,2.0 * led_spacing];   // LED6
-led7 = [0,3.0 * led_spacing];   // LED7
+
+led1 = [0,1.0 * led_spacing];   // LED4 - Center LED
+led2 = [0,0.0 * led_spacing];   // LED4 - Center LED
+led3 = [0,-1.0 * led_spacing];   // LED5
+
 
 // Define segment positions globally - Wide and squished
-seg_f = [-15, 14];     // F (top left vertical) - moved outward
-seg_e = [-15, -14];    // E (bottom left vertical) - moved outward
-seg_a = [0, 29];      // A (top horizontal) - same height
-seg_g = [0, 0];       // G (middle horizontal) - unchanged
-seg_b = [15, 15];      // B (top right vertical) - moved closer
-seg_c = [15, -15];     // C (bottom right vertical) - moved closer
-seg_d = [0, -29];     // D (bottom horizontal) - moved closer
+
+seg_a = [0, 16];      // A (top horizontal) - same height
+seg_b = [0, 0];       // G (middle horizontal) - unchanged
+seg_c = [0, -16];     // D (bottom horizontal) - moved closer
 
 // LED Strip Channel with wire channels - centered
 module led_channel() {
@@ -70,13 +65,10 @@ module all_cavities(visualization=false) {
     
     rotate([0, 0, 90]) {
         // Light paths
-        light_cavity(led1, seg_d, true);   // LED1 → F (vertical)
-        light_cavity(led2, seg_e, false);   // LED2 → E (vertical)
-        light_cavity(led3, seg_c, false);    // LED3 → A (horizontal)
-        light_cavity(led4, seg_g, true);    // LED4 → G (horizontal)
-        light_cavity(led5, seg_b, false);   // LED5 → B (vertical)
-        light_cavity(led6, seg_f, false);   // LED6 → C (vertical)
-        light_cavity(led7, seg_a, true);    // LED6 → D (horizontal)
+        light_cavity(led1, seg_a, true);   // LED1 → F (vertical)
+        light_cavity(led2, seg_b, true);   // LED2 → E (vertical)
+        light_cavity(led3, seg_c, true);    // LED3 → A (horizontal)
+
     }
 }
 
@@ -118,31 +110,34 @@ module diffuser_layer() {
 module side_cut(side = "left") {
     color("Green", alpha=0.9);
     if (side == "left") {
-    rotate([90, 0, 90])
-    translate([0, 0, -base_width/2])
-        linear_extrude(height=base_width)
+    rotate([90, 0, 0])
+    translate([0, 0, -base_length/2])
+        linear_extrude(height=base_length)
             polygon(
             points=[
-                [(strip_width/2)+base_space,0 - base_height/2],
-                [0+base_length/2,0 - base_height/2],
-                [0+base_length/2, base_height/2]
+                [0+base_width/2,0 - base_height/2],
+                [0 + led_spacing + led_size/2,0 - base_height/2],
+                [0+base_width/2, base_height/2]
                 ], 
             paths=[[0,1,2]]
         );
     } else if (side == "right") {
-        rotate([90, 0, 90])
-        translate([0, 0, -base_width/2])
-            linear_extrude(height=base_width)
+        rotate([90, 0, 0])
+        translate([0, 0, -base_length/2])
+            linear_extrude(height=base_length)
                 polygon(
                 points=[
-                    [(-strip_width/2)-base_space,0 - base_height/2],
-                    [0-base_length/2,0 - base_height/2],
-                    [0-base_length/2, base_height/2]
+                 [0-base_width/2,0 - base_height/2],
+                [0 - led_spacing - led_size/2,0 - base_height/2],
+                [0-base_width/2, base_height/2]
                     ], 
                 paths=[[0,1,2]]
             );
     }
 }
+
+
+
 
 
 // New module for the intersection shape
@@ -161,14 +156,23 @@ module intersection_layer() {
 // side_cut("left");
 // side_cut("right");
 // }
- color("Yellow", alpha=0.9) {
+    union() {
+         color("Yellow", alpha=0.9) {
+
     difference() {
         base();
         side_cut("left");
         side_cut("right");
     }
+         }
+    color("White", alpha=0.2) {
+        diffuser_layer();
+
+    }  
+    
  }
 
 // intersection_layer();
+// diffuser_layer();
 
 
