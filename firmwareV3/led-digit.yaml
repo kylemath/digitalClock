@@ -42,7 +42,7 @@ light:
           lambda: |-
             static int current_digit = 0;
 
-            static const Color sign_color = Color(255, 0, 0);
+            static const Color sign_color = Color(0, 255, 255);
             auto displayDigit = [&](int digit, int displayUnit, int ledsPerDigit = 7) {
               // Calculate the starting LED index for this display unit
               static const int DISPLAY_UNIT_INDICES[] = {0, 7, 17, 24};
@@ -71,7 +71,20 @@ light:
               if (digit >= 0 && digit <= 9) {
                 for (int segment = 0; segment < 7; segment++) {
                   if (SEGMENTS[digit][segment]) {
-                    it[baseIndex + segment] = sign_color;  // Reduced brightness to 50
+                    switch(displayUnit) {
+                      case 0:
+                        it[baseIndex + segment] = Color(255, 0, 255);  // Purple
+                        break;
+                      case 1:
+                        it[baseIndex + segment] = Color(0, 255, 255);  // Cyan
+                        break;
+                      case 2:
+                        it[baseIndex + segment] = Color(255, 255, 0);  // Yellow
+                        break;
+                      case 3:
+                        it[baseIndex + segment] = Color(255, 106, 150);    // Green
+                        break;
+                    }
                   }
                 }
               }
@@ -92,4 +105,4 @@ light:
             
             
             // Increment the counter
-            current_digit = (current_digit + 1) % 10;
+            current_digit = 6;
