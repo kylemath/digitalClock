@@ -42,7 +42,7 @@ light:
           lambda: |-
             static int current_digit = 0;
 
-            static const Color sign_color = Color(0, 0, 100);
+            static const Color sign_color = Color(255, 0, 0);
             auto displayDigit = [&](int digit, int displayUnit, int ledsPerDigit = 7) {
               // Calculate the starting LED index for this display unit
               static const int DISPLAY_UNIT_INDICES[] = {0, 7, 17, 24};
