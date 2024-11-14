@@ -7,7 +7,6 @@ esp8266:
 
 logger:
 
-# Add OTA configuration
 ota:
   platform: esphome
   password: !secret ota_password
@@ -34,26 +33,24 @@ light:
       then:
         - light.turn_on:
             id: led_strip
-            effect: "Segment Test"
+            effect: "Timer"
     effects:
       - addressable_lambda:
-          name: "Segment Test"
-          update_interval: 500ms
+          name: "Timer"
+          update_interval: 1000ms
           lambda: |-
-            static int current_digit = 0;
+            static unsigned long start_time = millis();
+            static const unsigned long TIMER_DURATION = 12 * 60 * 1000; // 6 minutes
+            static const Color sign_color = Color(255, 0, 255);
 
-            static const Color sign_color = Color(0, 255, 255);
             auto displayDigit = [&](int digit, int displayUnit, int ledsPerDigit = 7) {
-              // Calculate the starting LED index for this display unit
               static const int DISPLAY_UNIT_INDICES[] = {0, 7, 17, 24};
               int baseIndex = (displayUnit >= 0 && displayUnit < 4) ? DISPLAY_UNIT_INDICES[displayUnit] : 0;
               
-              // Clear this display unit's LEDs
               for (int i = baseIndex; i < baseIndex + ledsPerDigit; i++) {
                 it[i] = Color(0, 0, 0);
               }
               
-              // Arrays defining which segments are lit for each digit
               static const uint8_t SEGMENTS[10][7] = {
                 {1, 1, 1, 0, 1, 1, 1},    // 0
                 {0, 1, 0, 0, 0, 1, 0},    // 1
@@ -67,7 +64,6 @@ light:
                 {1, 1, 0, 1, 1, 1, 1}     // 9
               };
               
-              // Set the appropriate segments for the digit
               if (digit >= 0 && digit <= 9) {
                 for (int segment = 0; segment < 7; segment++) {
                   if (SEGMENTS[digit][segment]) {
@@ -76,13 +72,13 @@ light:
                         it[baseIndex + segment] = Color(255, 0, 255);  // Purple
                         break;
                       case 1:
-                        it[baseIndex + segment] = Color(0, 255, 255);  // Cyan
+                        it[baseIndex + segment] = Color(255, 0, 255);  // Purple
                         break;
                       case 2:
-                        it[baseIndex + segment] = Color(255, 255, 0);  // Yellow
+                        it[baseIndex + segment] = Color(255, 0, 255);  // Purple
                         break;
                       case 3:
-                        it[baseIndex + segment] = Color(255, 106, 150);    // Green
+                        it[baseIndex + segment] = Color(255, 0, 255);  // Purple
                         break;
                     }
                   }
@@ -90,19 +86,24 @@ light:
               }
             };
 
-            // Display the current digit
-            displayDigit(current_digit, 0);
-            displayDigit(current_digit, 1);
-            displayDigit(current_digit, 2);
-            displayDigit(current_digit, 3);
+            // Calculate remaining time
+            unsigned long elapsed = millis() - start_time;
+            unsigned long remaining = (elapsed >= TIMER_DURATION) ? 0 : (TIMER_DURATION - elapsed);
 
-            // Handle colon LEDs (assuming they're at indices 14, 15, 16)
+            // Convert to minutes and seconds
+            int minutes = (remaining / 1000) / 60;
+            int seconds = (remaining / 1000) % 60;
+
+            // Display minutes and seconds
+            displayDigit(minutes / 10, 0);
+            displayDigit(minutes % 10, 1);
+            displayDigit(seconds / 10, 2);
+            displayDigit(seconds % 10, 3);
+
+            // Handle colon LEDs
             static const int COLON_LEDS[] = {14, 16};
+            bool colon_on = (elapsed / 500) % 2 == 0;
             for (int i : COLON_LEDS) {
-              it[i] = sign_color;  // Set colon to same brightness
+              it[i] = colon_on ? sign_color : Color(0, 0, 0);
             }
-              it[15] = Color(0, 0, 0);  // Set colon to same brightness
-
-
-            // Increment the counter
-            current_digit = 6;
+            it[15] = Color(0, 0, 0);
