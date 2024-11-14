@@ -102,8 +102,7 @@ light:
 
             // Handle colon LEDs
             static const int COLON_LEDS[] = {14, 16};
-            bool colon_on = (elapsed / 500) % 2 == 0;
             for (int i : COLON_LEDS) {
-              it[i] = colon_on ? sign_color : Color(0, 0, 0);
+              it[i] = sign_color;
             }
             it[15] = Color(0, 0, 0);
