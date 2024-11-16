@@ -9,15 +9,15 @@ led_size = 5;         // 5mm square LED cutouts
 
 // Updated Base Parameters
 base_width = 40;      // Optimized smaller base
-base_length = 80;     // Adjusted proportionally
-base_height = 10;     // Increased by 25% from 25mm
+base_length = 81;     // Adjusted proportionally
+base_height = 15;     // Increased by 25% from 25mm
 base_space = 4;
 // Updated 7-Segment Display Parameters
 segment_h_length = 24;    // Increased horizontal length for wider number
 segment_width = 6;        // Keep wider segments
 
 // Add diffuser parameters
-diffuser_height = .28;
+diffuser_height = 3;
 
 // Define LED positions globally
 led1 = [0, -3.0 * led_spacing];  // LED1
@@ -159,30 +159,31 @@ module colon_base() {
 }
 
 // Add support parameters
-support_height = 30;        // Height from wall to LED strip
-support_width = 8;         // Thickness of support posts
+support_height = 20;        // Height from wall to LED strip
+support_width = 10;         // Thickness of support posts
 support_beam_height =10;   // Thickness of connecting beams
 back_cutout_width = total_base_width - (support_width * 2);  // Width between posts
 back_cutout_height = support_height - support_beam_height;   // Height of back opening
 
 // Support post module
 module support_post(x_pos, y_pos) {
-    translate([x_pos, y_pos, -support_height/2])
+    translate([x_pos, y_pos, -support_height/2 +5])
         cube([support_width, support_width, support_height], center=true);
 }
 
-// Support beam module (now with middle cutout)
-module support_beam() {
-    // Left beam
-    translate([-base_length/4, 0, -support_height + support_beam_height/2])
-        cube([base_length/2, total_base_width, support_beam_height], center=true);
-    
-    // Right beam
-    translate([base_length/4, 0, -support_height + support_beam_height/2])
-        cube([base_length/2, total_base_width, support_beam_height], center=true);
+// New module for connecting beam
+module connecting_beam(x_pos) {
+    translate([x_pos, 0, -support_height + support_beam_height/2])
+        cube([support_width, total_base_width + support_width + 10, support_beam_height], center=true);
 }
 
-// Update the final union to include supports
+// Add vertical beam module
+module vertical_connecting_beam(y_pos) {
+    translate([0, y_pos, -support_height + support_beam_height/2])
+        cube([base_length + support_width + 10, support_width, support_beam_height], center=true);
+}
+
+// Update the final union to include both horizontal and vertical beams
 union() {
     color("Yellow", alpha=0.9) {
         difference() {
@@ -195,26 +196,26 @@ union() {
                 single_digit(base_width*0.5 + colon_spacing/2);
                 single_digit(base_width*1.5 + colon_spacing/2);
                 
-                // Add support structure
-                // Corner posts
-                support_post(-base_length/2 + support_width/2, -total_base_width/2 + support_width/2);  // Back left
-                support_post(-base_length/2 + support_width/2, total_base_width/2 - support_width/2);   // Front left
-                support_post(base_length/2 - support_width/2, -total_base_width/2 + support_width/2);   // Back right
-                support_post(base_length/2 - support_width/2, total_base_width/2 - support_width/2);    // Front right
-                support_post(-base_length/2 +support_width/2, 0 - support_width/2 - strip_width/2);    // Front right
-                support_post(base_length/2 - support_width/2, 0 - support_width/2 - strip_width/2);    // Front right
-                support_post(-base_length/2 +support_width/2, 0 + support_width/2 + strip_width/2);    // Front right
-                support_post(base_length/2 - support_width/2, 0 + support_width/2 + strip_width/2);    // Front right
-
-                // Split horizontal beams
+                // Support posts
+                support_post(-base_length/2 -5, total_base_width/2 -3);    // Front right
+                support_post(-base_length/2 -5, -total_base_width/2 +3);   // Front left
+                support_post(base_length/2 +5, -total_base_width/2 +3);    // Back left
+                support_post(base_length/2 +5, total_base_width/2 -3);     // Back right
+                
+                // Horizontal connecting beams
+                // connecting_beam(-base_length/2 -5);  // Front beam
+                // connecting_beam(base_length/2 +5);   // Back beam
+                
+                // Vertical connecting beams
+                // vertical_connecting_beam(total_base_width/2 +5);     // Right side beam
+                // vertical_connecting_beam(-total_base_width/2 -30);    // Left side beam
             }
-            side_cut("left");
-            side_cut("right");
         }
     }
-    color("White", alpha=0.2) {
+    color("Green", alpha=0.6) {
         translate([0, 0, base_height/2 - diffuser_height/2])
-            cube([base_length, total_base_width, diffuser_height], center=true);
+            translate([0, -14, 0])
+            cube([base_length + 20, total_base_width + 33, diffuser_height], center=true);
     }
 }
 
@@ -234,15 +235,6 @@ module diffuser_layer() {
         cube([base_width, base_length, diffuser_height], center=true);
 }
 
-// // Render just the paths in red with slight transparency
-// //all_cavities(true);  // Show paths
-// union() {
-//    base();
-// //    diffuser_layer();
-// }
-   
-
-
 
 // New module for the intersection shape
 module intersection_layer() {
@@ -254,12 +246,7 @@ module intersection_layer() {
         };
     } 
 
-// union(){
-// Replace the final union() with:
-// color("Green", alpha=0.9) {
-// side_cut("left");
-// side_cut("right");
-// }
+
     union() {
          color("Yellow", alpha=0.9) {
 
@@ -273,54 +260,60 @@ module intersection_layer() {
     
  }
 
-rotate([-90,0,90])
-    translate([74,12.8,40])
-        scale([1.1, 1.1, .5])
-        import("/Users/kylemathewson/Downloads/ARGB_solderless_clip_3_wires_1.stl");
-
-rotate([-90,0,90])
-    translate([114,12.8,40])
-        scale([1.1, 1.1, .5])
-        import("/Users/kylemathewson/Downloads/ARGB_solderless_clip_3_wires_1.stl");
-
-rotate([-90,0,-90])
-    translate([74,12.8,40])
-        scale([1.1, 1.1, .5])
-        import("/Users/kylemathewson/Downloads/ARGB_solderless_clip_3_wires_1.stl");
-rotate([-90,0,-90])
-    translate([114,12.8,40])
-        scale([1.1, 1.1, .5])
-        import("/Users/kylemathewson/Downloads/ARGB_solderless_clip_3_wires_1.stl");
-
-
-rotate([-90,0,90])
-    translate([21,12.8,40])
-        scale([1.1, 1.1, .5])
-        import("/Users/kylemathewson/Downloads/ARGB_solderless_clip_3_wires_1.stl");
-
-rotate([-90,0,-90])
-    translate([21,12.8,40])
-        scale([1.1, 1.1, .5])
-        import("/Users/kylemathewson/Downloads/ARGB_solderless_clip_3_wires_1.stl");
-
-rotate([90,0,90])
-    translate([19,-12.8,40])
-        rotate([0,0,180])
+// Module to center and orient the LED clip at origin
+module led_clip() {
+    difference() {
+    // Center at origin and orient flat
+    translate([47.5, 4, -7.5])  // Adjust these values based on your STL's actual dimensions
+        rotate([0, 0, 0])  // Reset to natural orientation
             scale([1.1, 1.1, .5])
-            import("/Users/kylemathewson/Downloads/ARGB_solderless_clip_3_wires_1.stl");
-
-rotate([-90,900,90])
-    translate([19,-12.8,40])
-        rotate([0,0,180])
-            scale([1.1, 1.1, .5])
-            import("/Users/kylemathewson/Downloads/ARGB_solderless_clip_3_wires_1.stl");
-
-rotate([270,180,0])
-    translate([40,-70.5,86])
-    import("/Users/kylemathewson/Downloads/WEMOS_D1_MINI__MOUNT.stl");
+                import("/Users/kylemathewson/Downloads/ARGB_solderless_clip_3_wires_1.stl");
+    
+    }
+}
 
 
-// intersection_layer();
-// diffuser_layer();
+// Now use it with cleaner transforms
+    rotate([90, 0, 90])
+    translate([0, 0,  base_length/2 - 9.5])
+        led_clip();
+    rotate([90, 0, 270])
+    translate([0, 0,  base_length/2 - 19.5])
+        led_clip();        
+
+
+    rotate([90, 0, 270])
+    translate([-26.5, 0,  base_length/2])
+        led_clip(); 
+    rotate([90, 0, 270])
+    translate([-26.5 - base_width, 0,  base_length/2])
+        led_clip(); 
+    rotate([90, 0, 270])
+    translate([26.5, 0,  base_length/2])
+        led_clip(); 
+    rotate([90, 0, 270])
+    translate([26.5 + base_width, 0,  base_length/2])
+        led_clip(); 
+rotate([90, 0, 90])
+    translate([26.5, 0,  base_length/2])
+        led_clip(); 
+rotate([90, 0, 90])
+    translate([26.5 + base_width, 0,  base_length/2])
+        led_clip(); 
+rotate([90, 0, 90])
+    translate([-26.5, 0,  base_length/2])
+        led_clip(); 
+rotate([90, 0, 90])
+    translate([-26.5 - base_width, 0,  base_length/2])
+        led_clip(); 
+
+
+
+// holder for d1 mini
+rotate([270,90,0])
+    translate([-2,-20,-100])
+    rotate([0,90,0])
+    import("/Users/kylemathewson/Downloads/D1Mini_Bottom_part.stl");
+
 
 
