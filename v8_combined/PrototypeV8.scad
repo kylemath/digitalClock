@@ -17,7 +17,7 @@ segment_h_length = 24;    // Increased horizontal length for wider number
 segment_width = 6;        // Keep wider segments
 
 // Add diffuser parameters
-diffuser_height = 3;
+diffuser_height = .28;
 
 // Define LED positions globally
 led1 = [0, -3.0 * led_spacing];  // LED1
@@ -213,9 +213,21 @@ union() {
         }
     }
     color("Green", alpha=0.6) {
-        translate([0, 0, base_height/2 - diffuser_height/2])
-            translate([0, -14, 0])
-            cube([base_length + 20, total_base_width + 33, diffuser_height], center=true);
+        translate([0, 0, base_height/2])
+            translate([0, -16, diffuser_height/2])
+            cube([base_length + 20, total_base_width + 36, diffuser_height], center=true);
+    }
+        color("Black", alpha=0.8) {
+        translate([0, 0, base_height/2])
+            difference() {
+                // Outer surface
+                translate([0, -16, -1.5])
+
+                cube([base_length + 20, total_base_width + 36, 3], center=true);
+                // Inner cutout
+                translate([0, 0, -1.5])
+                cube([base_length, total_base_width, 4], center=true); // Slightly thicker to ensure clean cut
+            }
     }
 }
 
@@ -229,36 +241,6 @@ module segment(length, width) {
     }
 }
 
-// Diffuser layer module
-module diffuser_layer() {
-    translate([0, 0, (base_height/2) - diffuser_height/2])  // Changed to sit directly on base
-        cube([base_width, base_length, diffuser_height], center=true);
-}
-
-
-// New module for the intersection shape
-module intersection_layer() {
-        color("Red", alpha=0.9)  // Semi-transparent to visualize
-
-        intersection() {
-            all_cavities(true);
-            diffuser_layer();
-        };
-    } 
-
-
-    union() {
-         color("Yellow", alpha=0.9) {
-
-        base();
-    
-         }
-    color("White", alpha=0.2) {
-        diffuser_layer();
-
-    }  
-    
- }
 
 // Module to center and orient the LED clip at origin
 module led_clip() {
@@ -311,7 +293,7 @@ rotate([90, 0, 90])
 
 // holder for d1 mini
 rotate([270,90,0])
-    translate([-2,-20,-100])
+    translate([-2,-20,-103])
     rotate([0,90,0])
     import("/Users/kylemathewson/Downloads/D1Mini_Bottom_part.stl");
 
