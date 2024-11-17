@@ -67,6 +67,8 @@ colon_dot4 = [0, -29];     // Decimal - aligned with segment_d position
 colon_spacing = base_width/2;  // Match the colon_depth
 total_base_width = (base_width * 4) + colon_spacing;  // Updated to include colon space
 
+side_addon = 13.5;
+clip_space = 4.5;
 
 // Update the final union to include both horizontal and vertical beams
 union() {
@@ -89,24 +91,24 @@ union() {
                 
                 // Add left extension block with LED channel
                 difference() {
-                    translate([0, -total_base_width/2 - 7.5/2, 0])
-                        cube([base_length, 7.5, base_height], center=true);
+                    translate([0, -total_base_width/2 - side_addon/2, 0])
+                        cube([base_length, side_addon, base_height], center=true);
                     // LED channel cutout
-                    translate([vertical_strip_offset-strip_width/2 - tolerance/2, -total_base_width/2 - 7.5, -base_height/2])
-                        cube([strip_width + tolerance, 7.5, strip_height + tolerance]);
-                    translate([-vertical_strip_offset-strip_width/2 - tolerance/2, -total_base_width/2 - 7.5, -base_height/2])
-                        cube([strip_width + tolerance, 7.5, strip_height + tolerance]);
+                    translate([vertical_strip_offset-strip_width/2 - tolerance/2 - clip_space/2, -total_base_width/2 - side_addon, -base_height/2])
+                        cube([strip_width + tolerance + clip_space, side_addon, strip_height + tolerance]);
+                    translate([-vertical_strip_offset-strip_width/2 - tolerance/2 -clip_space/2, -total_base_width/2 - side_addon, -base_height/2])
+                        cube([strip_width + tolerance + clip_space, side_addon, strip_height + tolerance]);
                 }
                 
                 // Add right extension block with LED channel
                 difference() {
-                    translate([0, total_base_width/2 + 7.5/2, 0])
-                        cube([base_length, 7.5, base_height], center=true);
+                    translate([0, total_base_width/2 + side_addon/2, 0])
+                        cube([base_length, side_addon, base_height], center=true);
                     // LED channel cutout
-                    translate([vertical_strip_offset-strip_width/2 - tolerance/2, total_base_width/2, -base_height/2])
-                        cube([strip_width + tolerance, 7.5, strip_height + tolerance]);
-                    translate([-vertical_strip_offset-strip_width/2 - tolerance/2, total_base_width/2, -base_height/2])
-                        cube([strip_width + tolerance, 7.5, strip_height + tolerance]);
+                    translate([vertical_strip_offset-strip_width/2 - tolerance/2 - clip_space/2, total_base_width/2, -base_height/2])
+                        cube([strip_width + tolerance + clip_space, side_addon, strip_height + tolerance]);
+                    translate([-vertical_strip_offset-strip_width/2 - tolerance/2 -clip_space/2, total_base_width/2, -base_height/2])
+                        cube([strip_width + tolerance + clip_space, side_addon, strip_height + tolerance]);
                 }
             }
         }
@@ -252,12 +254,15 @@ module vertical_connecting_beam(y_pos) {
 // Module to center and orient the LED clip at origin
 module led_clip() {
     difference() {
-    // Center at origin and orient flat
-    translate([47.5, 6, -7.5])  // Adjust these values based on your STL's actual dimensions
-        rotate([0, 0, 0])  // Reset to natural orientation
-            scale([1.1, 1.3, .5])
+        // Center at origin and orient flat
+        translate([47.5, 6, -7.5])  
+            rotate([0, 0, 0])  
+            scale([1.1, 1.1, 1.1])
                 import("/Users/kylemathewson/Downloads/ARGB_solderless_clip_3_wires_1.stl");
-    
+        
+        // VERY obvious cutting block - removes about half the clip
+        translate([0, 0, -16.1])  // Raised higher to cut more
+            cube([20, 20, 20], center=true);  // Much larger cube
     }
 }
 
@@ -266,18 +271,18 @@ module led_clip() {
 // LED clips
 
     rotate([90, 0, 180])
-    translate([-vertical_strip_offset, 0,  total_base_width/2 + 6])
+    translate([-vertical_strip_offset,  -1.45,  total_base_width/2+ 4.5])
         led_clip(); 
 
     rotate([90, 0, 180])
-    translate([vertical_strip_offset, 0,  total_base_width/2 + 6])
+    translate([vertical_strip_offset,  -1.45,  total_base_width/2 + 4.5])
         led_clip(); 
   
     rotate([90, 0, 0])
-    translate([vertical_strip_offset, 0,  total_base_width/2 + 6])
+    translate([vertical_strip_offset,  -1.45,  total_base_width/2 + 4.5])
         led_clip(); 
     rotate([90, 0, 0])
-    translate([-vertical_strip_offset, 0,  total_base_width/2 + 6])
+    translate([-vertical_strip_offset, -1.45,  total_base_width/2 + 4.5])
         led_clip(); 
 
 
