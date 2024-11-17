@@ -116,7 +116,7 @@ union() {
     color("Green", alpha=0.6) {
         translate([0, 0, base_height/2])
             translate([0, 0, diffuser_height/2])
-            cube([base_length, total_base_width + 15, diffuser_height], center=true);
+            cube([base_length, total_base_width + side_addon * 2, diffuser_height], center=true);
     }
 }
 
