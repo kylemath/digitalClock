@@ -258,7 +258,7 @@ module led_clip() {
         translate([47.5, 6, -7.5])  
             rotate([0, 0, 0])  
             scale([1.1, 1.1, 1.1])
-                import("/Users/kylemathewson/Downloads/ARGB_solderless_clip_3_wires_1.stl");
+                import("./ARGB_solderless_clip_3_wires_1.stl");
         
         // VERY obvious cutting block - removes about half the clip
         translate([0, 0, -16.1])  // Raised higher to cut more
@@ -289,7 +289,7 @@ module led_clip() {
 // holder for d1 mini
 module d1_mini_cropped() {
     difference() {
-        import("/Users/kylemathewson/Downloads/D1Mini_Bottom_part.stl");
+        import("./D1Mini_Bottom_part.stl");
         // Cutting cube to remove bottom half
         translate([0, 0, -50])  // Adjust Z position to cut at desired height
             cube([100, 100, 100], center=true);  // Make sure cube is large enough
@@ -298,7 +298,7 @@ module d1_mini_cropped() {
 
 // Use the cropped version with your transformations
 rotate([270,90,0])
-    translate([7.5,-12,-50])
+    translate([7.5,-12,0])
     rotate([0,90,0])
         // rotate([0,0,90])
         d1_mini_cropped();
