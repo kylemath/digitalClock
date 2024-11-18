@@ -4,7 +4,7 @@
 led_spacing = 10;      // 10mm between LED centers
 strip_width = 10;      // 10mm wide LED strip
 strip_height = 2;      // Keep same
-tolerance = 0.5;       // Keep same
+tolerance = 0.8;       // Keep same
 led_size = 5;         // 5mm square LED cutouts
 
 // Updated Base Parameters
@@ -20,7 +20,7 @@ segment_width = 6;        // Keep wider segments
 diffuser_height = .28;
 
 // Add support parameters
-support_height = 10;        // Height from wall to LED strip
+support_height = 8;        // Height from wall to LED strip
 support_width = 13;         // Thickness of support posts
 support_beam_height =10;   // Thickness of connecting beams
 
@@ -28,14 +28,14 @@ support_beam_height =10;   // Thickness of connecting beams
 vertical_strip_offset = 15;
 
 // Define LED positions globally
-led1 = [-1.5 * led_spacing, -vertical_strip_offset];  // LED1
-led2 = [-.5 * led_spacing, -vertical_strip_offset];  // LED2
-led3 = [.5 * led_spacing, -vertical_strip_offset];  // LED3
-led4 = [1.5 * led_spacing, -vertical_strip_offset];   // LED4 - Center LED
+led1 = [-1.5 * led_spacing, -vertical_strip_offset];  // LED1 - 15mm left from center
+led2 = [-0.5 * led_spacing, -vertical_strip_offset];  // LED2 - 5mm left from center
+led3 = [0.5 * led_spacing, -vertical_strip_offset];   // LED3 - 5mm right from center
+led4 = [1.5 * led_spacing, -vertical_strip_offset];   // LED4 - 15mm right from center
 led5 = [-1.5 * led_spacing, vertical_strip_offset];   // LED5
-led6 = [-.5 * led_spacing,vertical_strip_offset];   // LED6
-led7 = [.5 * led_spacing, vertical_strip_offset];   // LED7
-led8 = [1.5 * led_spacing, vertical_strip_offset];   // LED7
+led6 = [-0.5 * led_spacing, vertical_strip_offset];   // LED6
+led7 = [0.5 * led_spacing, vertical_strip_offset];    // LED7
+led8 = [1.5 * led_spacing, vertical_strip_offset];    // LED8
 
 // Define segment positions globally - Wide and squished
 seg_f = [-15, 14];     // F (top left vertical) - moved outward
@@ -94,10 +94,23 @@ union() {
                     translate([0, -total_base_width/2 - side_addon/2, 0])
                         cube([base_length, side_addon, base_height], center=true);
                     // LED channel cutout
-                    translate([vertical_strip_offset-strip_width/2 - tolerance/2 - clip_space/2, -total_base_width/2 - side_addon, -base_height/2])
-                        cube([strip_width + tolerance + clip_space, side_addon, strip_height + tolerance]);
-                    translate([-vertical_strip_offset-strip_width/2 - tolerance/2 -clip_space/2, -total_base_width/2 - side_addon, -base_height/2])
-                        cube([strip_width + tolerance + clip_space, side_addon, strip_height + tolerance]);
+                    translate([vertical_strip_offset-strip_width/2 - tolerance/2 - clip_space/2, -total_base_width/2 - side_addon + 2, -base_height/2])
+                        cube([strip_width + tolerance + clip_space, side_addon, strip_height + tolerance + 10]);
+                    translate([-vertical_strip_offset-strip_width/2 - tolerance/2 -clip_space/2, -total_base_width/2 - side_addon + 2, -base_height/2])
+                        cube([strip_width + tolerance + clip_space *4.4, side_addon, strip_height + tolerance + 10]);
+                    
+                    // LED channel cutouts for side addon
+                    translate([vertical_strip_offset-strip_width/2 - tolerance/2 - clip_space/2, -total_base_width/2 - side_addon + 2, -base_height/2])
+                        cube([strip_width + tolerance + clip_space, side_addon, strip_height + tolerance + 2]);
+                    translate([-vertical_strip_offset-strip_width/2 - tolerance/2 -clip_space/2, -total_base_width/2 - side_addon + 2, -base_height/2])
+                        cube([strip_width + tolerance + clip_space *4.4, side_addon, strip_height + tolerance + 2]);
+
+
+                    translate([-vertical_strip_offset-strip_width/2 - tolerance/2 -clip_space/2, -total_base_width/2 - side_addon + 2, -base_height/2])
+                        rotate([0, 90,0])
+                        cube([strip_width + tolerance + clip_space *4.4, side_addon, strip_height + tolerance + 2]);
+                    
+  
                 }
                 
                 // Add right extension block with LED channel
@@ -106,9 +119,9 @@ union() {
                         cube([base_length, side_addon, base_height], center=true);
                     // LED channel cutout
                     translate([vertical_strip_offset-strip_width/2 - tolerance/2 - clip_space/2, total_base_width/2, -base_height/2])
-                        cube([strip_width + tolerance + clip_space, side_addon, strip_height + tolerance]);
+                        cube([strip_width + tolerance + clip_space, 10, strip_height + tolerance + 10]);
                     translate([-vertical_strip_offset-strip_width/2 - tolerance/2 -clip_space/2, total_base_width/2, -base_height/2])
-                        cube([strip_width + tolerance + clip_space, side_addon, strip_height + tolerance]);
+                        cube([strip_width + tolerance + clip_space*4.4, 10, strip_height + tolerance+10]);
                 }
             }
         }
@@ -161,14 +174,14 @@ module led_channels() {
 
 // Single light pipe cavity with elongating shape
 module light_cavity(led_pos, segment_pos, is_horizontal=false) {
-    // Calculate heights for better progression
     z_bottom = -base_height/2 + strip_height;
     z_top = base_height/2;
     total_height = z_top - z_bottom;
     hull() {
-        // Bottom (at LED) - small square
+        // Bottom (at LED) - small square exactly 5mm + tolerance
         translate([led_pos[0] - led_size/2, led_pos[1] - led_size/2, z_bottom])
-            cube([led_size, led_size, 2]);            
+            cube([led_size + tolerance, led_size + tolerance, 2]);            
+        
         // Top (at segment) - full segment shape
         translate([segment_pos[0], segment_pos[1], z_top ]) {
             rotate([0, 0, is_horizontal ? 0 : 90])
@@ -176,7 +189,6 @@ module light_cavity(led_pos, segment_pos, is_horizontal=false) {
                     segment(segment_h_length, segment_width);
         }
     }
-    
 }
 
 // Update colon cavity module
@@ -235,7 +247,7 @@ module segment(length, width) {
 module support_post(x_pos, y_pos) {
     difference() {
         // Original post
-        translate([x_pos, y_pos, -12 ])
+        translate([x_pos, y_pos, -10 ])
             cube([support_width, support_width, support_height], center=true);
         }
 }
@@ -270,20 +282,20 @@ module led_clip() {
 
 // LED clips
 
-    rotate([90, 0, 180])
-    translate([-vertical_strip_offset,  -1.45,  total_base_width/2+ 4.5])
-        led_clip(); 
+    // rotate([90, 0, 180])
+    // translate([-vertical_strip_offset,  -1.45,  total_base_width/2+ 4.5])
+    //     led_clip(); 
 
-    rotate([90, 0, 180])
-    translate([vertical_strip_offset,  -1.45,  total_base_width/2 + 4.5])
-        led_clip(); 
+    // rotate([90, 0, 180])
+    // translate([vertical_strip_offset,  -1.45,  total_base_width/2 + 4.5])
+    //     led_clip(); 
   
-    rotate([90, 0, 0])
-    translate([vertical_strip_offset,  -1.45,  total_base_width/2 + 4.5])
-        led_clip(); 
-    rotate([90, 0, 0])
-    translate([-vertical_strip_offset, -1.45,  total_base_width/2 + 4.5])
-        led_clip(); 
+    // rotate([90, 0, 0])
+    // translate([vertical_strip_offset,  -1.45,  total_base_width/2 + 4.5])
+    //     led_clip(); 
+    // rotate([90, 0, 0])
+    // translate([-vertical_strip_offset, -1.45,  total_base_width/2 + 4.5])
+    //     led_clip(); 
 
 
 // holder for d1 mini
