@@ -1,9 +1,16 @@
+# 'esphome --dashboard run ./firmwareV4/led-digit.yaml --device OTA
 esphome:
   name: seven-seg-test
   friendly_name: Seven Segment Test
 
 esp8266:
   board: d1_mini
+
+# Add this time component
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: America/Edmonton # Change this to your timezone
 
 logger:
 
@@ -21,11 +28,11 @@ wifi:
 
 light:
   - platform: neopixelbus
+    id: led_strip
+    name: "LED Strip"
     type: RGB
     pin: GPIO4
-    num_leds: 31
-    name: "LED Strip"
-    id: led_strip
+    num_leds: 36
     variant: WS2812
     default_transition_length: 0s
     restore_mode: ALWAYS_ON
@@ -33,76 +40,73 @@ light:
       then:
         - light.turn_on:
             id: led_strip
-            effect: "Timer"
+            effect: "Show Time"
     effects:
       - addressable_lambda:
-          name: "Timer"
+          name: "Show Time"
           update_interval: 1000ms
           lambda: |-
-            static unsigned long start_time = millis();
-            static const unsigned long TIMER_DURATION = 12 * 60 * 1000; // 6 minutes
-            static const Color sign_color = Color(255, 0, 255);
+            static const Color sign_color = Color(255, 0, 0);
+            static const Color off_color = Color(0, 0, 0);
 
-            auto displayDigit = [&](int digit, int displayUnit, int ledsPerDigit = 7) {
-              static const int DISPLAY_UNIT_INDICES[] = {0, 7, 17, 24};
-              int baseIndex = (displayUnit >= 0 && displayUnit < 4) ? DISPLAY_UNIT_INDICES[displayUnit] : 0;
-              
-              for (int i = baseIndex; i < baseIndex + ledsPerDigit; i++) {
-                it[i] = Color(0, 0, 0);
-              }
-              
-              static const uint8_t SEGMENTS[10][7] = {
-                {1, 1, 1, 0, 1, 1, 1},    // 0
-                {0, 1, 0, 0, 0, 1, 0},    // 1
-                {1, 0, 1, 1, 0, 1, 1},    // 2
-                {1, 1, 0, 1, 0, 1, 1},    // 3
-                {0, 1, 0, 1, 1, 1, 0},    // 4
-                {1, 1, 0, 1, 1, 0, 1},    // 5
-                {1, 1, 1, 1, 1, 0, 1},    // 6
-                {0, 1, 0, 0, 0, 1, 1},    // 7
-                {1, 1, 1, 1, 1, 1, 1},    // 8
-                {1, 1, 0, 1, 1, 1, 1}     // 9
-              };
-              
-              if (digit >= 0 && digit <= 9) {
-                for (int segment = 0; segment < 7; segment++) {
-                  if (SEGMENTS[digit][segment]) {
-                    switch(displayUnit) {
-                      case 0:
-                        it[baseIndex + segment] = Color(255, 0, 255);  // Purple
-                        break;
-                      case 1:
-                        it[baseIndex + segment] = Color(255, 0, 255);  // Purple
-                        break;
-                      case 2:
-                        it[baseIndex + segment] = Color(255, 0, 255);  // Purple
-                        break;
-                      case 3:
-                        it[baseIndex + segment] = Color(255, 0, 255);  // Purple
-                        break;
-                    }
-                  }
-                }
-              }
+            auto time = id(sntp_time).now();
+            int hours = time.hour;
+            int minutes = time.minute;
+
+            // Convert to 12-hour format
+            if (hours > 12) hours -= 12;
+            if (hours == 0) hours = 12;
+
+            // Keep your existing SEGMENTS array and display_digit function exactly as they are
+            static const uint8_t SEGMENTS[10][8] = {
+              {1, 0, 1, 1, 1, 1, 0, 1},    // 0
+              {0, 0, 0, 1, 0, 0, 0, 1},    // 1
+              {1, 1, 1, 0, 0, 1, 1, 1},    // 2
+              {0, 1, 1, 1, 0, 1, 1, 1},    // 3
+              {0, 1, 0, 1, 1, 0, 1, 1},    // 4
+              {0, 1, 1, 1, 1, 1, 1, 0},    // 5
+              {1, 1, 1, 1, 1, 1, 1, 0},    // 6
+              {0, 0, 0, 1, 0, 1, 0, 1},    // 7
+              {1, 1, 1, 1, 1, 1, 1, 1},    // 8
+              {0, 1, 1, 1, 1, 1, 1, 1}     // 9
             };
 
-            // Calculate remaining time
-            unsigned long elapsed = millis() - start_time;
-            unsigned long remaining = (elapsed >= TIMER_DURATION) ? 0 : (TIMER_DURATION - elapsed);
+            // Function to display a number at a specific digit position
+            auto display_digit = [&](int bottom_start, int top_start, int number) {
+              if (number < 0 || number > 9) return;
+              
+              // Bottom row LEDs
+              it[bottom_start].set(SEGMENTS[number][0] ? sign_color : off_color);      // i
+              it[bottom_start + 1].set(SEGMENTS[number][1] ? sign_color : off_color);  // ii
+              it[bottom_start + 2].set(SEGMENTS[number][2] ? sign_color : off_color);  // iii
+              it[bottom_start + 3].set(SEGMENTS[number][3] ? sign_color : off_color);  // iv
+              
+              // Top row LEDs
+              it[top_start].set(SEGMENTS[number][4] ? sign_color : off_color);      // v
+              it[top_start - 1].set(SEGMENTS[number][5] ? sign_color : off_color);  // vi
+              it[top_start - 2].set(SEGMENTS[number][6] ? sign_color : off_color);  // vii
+              it[top_start - 3].set(SEGMENTS[number][7] ? sign_color : off_color);  // viii
+            };
 
-            // Convert to minutes and seconds
-            int minutes = (remaining / 1000) / 60;
-            int seconds = (remaining / 1000) % 60;
-
-            // Display minutes and seconds
-            displayDigit(minutes / 10, 0);
-            displayDigit(minutes % 10, 1);
-            displayDigit(seconds / 10, 2);
-            displayDigit(seconds % 10, 3);
-
-            // Handle colon LEDs
-            static const int COLON_LEDS[] = {14, 16};
-            for (int i : COLON_LEDS) {
-              it[i] = sign_color;
+            // Clear all LEDs first
+            for (int i = 0; i < it.size(); i++) {
+              it[i].set(off_color);
             }
-            it[15] = Color(0, 0, 0);
+
+            // Display hours and minutes using your working LED positions
+            if (hours < 10) {
+              // Hours < 10, leave first digit blank
+              display_digit(4, 31, hours);          // Hours in ones position
+            } else {
+              // Hours 10-12, show both digits
+              display_digit(0, 35, hours / 10);     // Hours tens
+              display_digit(4, 31, hours % 10);     // Hours ones
+            }
+
+            // Always show both digits for minutes
+            display_digit(10, 25, minutes / 10);    // Minutes tens
+            display_digit(14, 21, minutes % 10);    // Minutes ones
+
+            // Light up both colon pairs (always on)
+            it[8].set(sign_color);   // First colon bottom
+            it[27].set(sign_color);  // Second colon bottom
