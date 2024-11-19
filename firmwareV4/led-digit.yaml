@@ -46,7 +46,7 @@ light:
           name: "Show Time"
           update_interval: 1000ms
           lambda: |-
-            static const Color sign_color = Color(255, 0, 0);
+            static const Color sign_color = Color(200, 60, 60);
             static const Color off_color = Color(0, 0, 0);
 
             auto time = id(sntp_time).now();
