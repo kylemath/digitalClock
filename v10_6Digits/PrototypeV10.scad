@@ -14,10 +14,10 @@ base_height = 15;     // Increased by 25% from 25mm
 
 // Updated 7-Segment Display Parameters
 segment_h_length = 15;    // Increased horizontal length for wider number
-segment_width = 6;        // Keep wider segments
+segment_width = 4;        // Keep wider segments
 
 // Add diffuser parameters
-diffuser_height = .28;
+diffuser_height = .56;
 
 // Add support parameters
 support_height = 8;        // Height from wall to LED strip
