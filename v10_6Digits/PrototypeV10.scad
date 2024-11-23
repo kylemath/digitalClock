@@ -14,7 +14,7 @@ base_height = 10;     // Increased by 25% from 25mm
 
 // Updated 7-Segment Display Parameters
 segment_h_length = 18;    // Increased horizontal length for wider number
-segment_width = 6;        // Keep wider segments
+segment_width = 7;        // Keep wider segments
 
 // Add diffuser parameters
 diffuser_height = .56;
@@ -40,11 +40,12 @@ led8 = [1.5 * led_spacing, vertical_strip_offset];    // LED8
 // Define sgment positions globally - Wide and squished
 seg_f = [-12, 10];     // F (top left vertical) - moved outward
 seg_e = [-12, -10];    // E (bottom left vertical) - moved outward
-seg_a = [0, 20.5];      // A (top horizontal) - same height
-seg_g = [0, 0];       // G (middle horizontal) - unchanged
+seg_a = [0, 20];      // A (top horizontal) - same height
+seg_g = [-3.5, 0];       // G (middle horizontal) - unchanged
+seg_h = [3.5, 0];       // G (middle horizontal) - unchanged
 seg_b = [12, 10];      // B (top right vertical) - moved closer
 seg_c = [12, -10];     // C (bottom right vertical) - moved closer
-seg_d = [0, -20.5];     // D (bottom horizontal) - moved closer
+seg_d = [0, -20];     // D (bottom horizontal) - moved closer
 
 // Define dot positions (positioned for visual appearance)
 colon_dot1 = [0, 11];      // Top dot
@@ -98,14 +99,17 @@ union() {
 module all_cavities(visualization=false) {
     rotate([0, 0, 90]) {
         // Light paths
-        light_cavity(led1, seg_e, false);   // LED2 → E (vertical)
-        light_cavity(led2, seg_g, true);    // LED6 → D (horizontal)
-        light_cavity(led3, seg_d, true);   // LED1 → F (vertical)
-        light_cavity(led4, seg_c, false);    // LED3 → A (horizontal)
-        light_cavity(led5, seg_f, false);   // LED6 → C (vertical)
-        light_cavity(led6, seg_g, true);    // LED6 → D (horizontal)
-        light_cavity(led7, seg_a, true);    // LED4 → G (horizontal)
-        light_cavity(led8, seg_b, false);   // LED5 → B (vertical)
+        light_cavity(led1, seg_e, false, false);   // LED2 → E (vertical)
+        light_cavity(led3, seg_d, true, false);   // LED1 → F (vertical)
+        light_cavity(led4, seg_c, false, false);    // LED3 → A (horizontal)
+        light_cavity(led5, seg_f, false, false);   // LED6 → C (vertical)
+        light_cavity(led6, seg_a, true, false);    // LED4 → G (horizontal)
+        light_cavity(led8, seg_b, false, false);   // LED5 → B (vertical)
+
+        light_cavity(led2, seg_g, true, true);    // LED6 → D (horizontal)
+        light_cavity(led7, seg_h, true, true);    // LED6 → D (horizontal)
+        
+
     }
 }
 
@@ -154,7 +158,7 @@ module led_channels() {
 }
 
 // Single light pipe cavity with elongating shape
-module light_cavity(led_pos, segment_pos, is_horizontal=false) {
+module light_cavity(led_pos, segment_pos, is_horizontal=false, is_center=false) {
     z_bottom = -base_height/2 + strip_height;
     z_top = base_height/2;
     total_height = z_top - z_bottom;
@@ -176,7 +180,7 @@ module light_cavity(led_pos, segment_pos, is_horizontal=false) {
         translate([segment_pos[0], segment_pos[1], z_top ]) {
             rotate([0, 0, is_horizontal ? 0 : 90])
                 linear_extrude(height=.1)
-                    segment(segment_h_length, segment_width);
+                    segment(is_center ? segment_h_length*.2 : segment_h_length, segment_width);
         }
     }
 }
@@ -186,10 +190,20 @@ module colon_cavity(led_pos, dot_pos) {
     z_bottom = -colon_height/2 + strip_height;
     z_top = colon_height/2;
     
+ // Bottom (at LED) - small square with centered tolerance
+    translate([led_pos[0] - (led_size + tolerance)/2, 
+              led_pos[1] - (led_size + tolerance)/2, 
+              z_bottom])
+        cube([led_size + tolerance, led_size + tolerance, 2]);            
+        
+     
+
     hull() {
-        // Bottom (at LED) - small square
-        translate([led_pos[0] - led_size/2, led_pos[1] - led_size/2, z_bottom])
-            cube([led_size + tolerance, led_size + tolerance, 2]);
+       // Bottom (at LED) - small square exactly 5mm
+        translate([led_pos[0] - led_size/2, 
+                  led_pos[1] - led_size/2, 
+                  z_bottom + 2])
+            cube([led_size, led_size, 2]);  
             
         // Top (at dot) - circular dot
         translate([dot_pos[0], dot_pos[1], z_top]) {
@@ -201,21 +215,41 @@ module colon_cavity(led_pos, dot_pos) {
 
 // Update colon base module
 module colon_base() {
+    channel_taper = 1; // How much to narrow the channel at the bottom (in mm)
+    channel_height = strip_height + tolerance;
+    
     difference() {
         // Main block
         cube([colon_width, colon_depth, colon_height], center=true);
         
-        // LED channel
-        translate([ vertical_strip_offset-strip_width/2 - tolerance/2, -colon_depth/2, -colon_height/2])
-            cube([ strip_width + tolerance, colon_depth, strip_height + tolerance]);
-                 // LED channel
-        translate([ -vertical_strip_offset-strip_width/2 - tolerance/2, -colon_depth/2, -colon_height/2])
-            cube([ strip_width + tolerance, colon_depth, strip_height + tolerance]);
+        // Left LED channel
+        translate([-vertical_strip_offset-strip_width/2, -colon_depth/2, -colon_height/2]) {
+            hull() {
+                // Bottom rectangle - narrower width
+                translate([channel_taper/2, 0, 0])
+                    cube([strip_width + tolerance - channel_taper, colon_depth, 0.1]);
+                // Top rectangle - full width
+                translate([0, 0, channel_height])
+                    cube([strip_width + tolerance, colon_depth, 0.1]);
+            }
+        }
+        
+        // Right LED channel
+        translate([vertical_strip_offset-strip_width/2, -colon_depth/2, -colon_height/2]) {
+            hull() {
+                // Bottom rectangle - narrower width
+                translate([channel_taper/2, 0, 0])
+                    cube([strip_width + tolerance - channel_taper, colon_depth, 0.1]);
+                // Top rectangle - full width
+                translate([0, 0, channel_height])
+                    cube([strip_width + tolerance, colon_depth, 0.1]);
+            }
+        }
             
-        // Light cavities for all dots
+        // Light cavities for dots remain unchanged
         rotate([0, 0, 90]) {
-            colon_cavity(colon_led1, colon_dot1);  // Top dot - angled path
-            colon_cavity(colon_led3, colon_dot3);  // Bottom dot - angled path
+            colon_cavity(colon_led1, colon_dot1);
+            colon_cavity(colon_led3, colon_dot3);
         }   
     }
 }
