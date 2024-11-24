@@ -4,7 +4,7 @@
 led_spacing = 10;      // 10mm between LED centers
 strip_width = 10;      // 10mm wide LED strip
 strip_height = 2;      // Keep same
-tolerance = 0.5;       // Keep same
+tolerance = 0.7;       // Keep same
 led_size = 5;         // 5mm square LED cutouts
 
 // Updated Base Parameters
@@ -41,8 +41,8 @@ led8 = [1.5 * led_spacing, vertical_strip_offset];    // LED8
 seg_f = [-12, 10];     // F (top left vertical) - moved outward
 seg_e = [-12, -10];    // E (bottom left vertical) - moved outward
 seg_a = [0, 20];      // A (top horizontal) - same height
-seg_g = [-3.5, 0];       // G (middle horizontal) - unchanged
-seg_h = [3.5, 0];       // G (middle horizontal) - unchanged
+seg_g = [-3.5, .15];       // G (middle horizontal) - unchanged
+seg_h = [3.5, -.15];       // G (middle horizontal) - unchanged
 seg_b = [12, 10];      // B (top right vertical) - moved closer
 seg_c = [12, -10];     // C (bottom right vertical) - moved closer
 seg_d = [0, -20];     // D (bottom horizontal) - moved closer
@@ -74,24 +74,29 @@ union() {
         difference() {
             union() {
                 // Existing digits and colon
-                single_digit(-base_width*1.375 - colon_spacing/2);
-                single_digit(-base_width*0.375 - colon_spacing/2);
+                single_digit(-base_width*1.375 - colon_spacing/2, 2);
+                single_digit(-base_width*0.375 - colon_spacing/2, 0);
                 translate([0, 0, 0])
                     colon_base();
-                single_digit(base_width*0.375 + colon_spacing/2);
-                single_digit(base_width*1.375 + colon_spacing/2);
+                single_digit(base_width*0.375 + colon_spacing/2, 0);
+                single_digit(base_width*1.375 + colon_spacing/2, 0);
                 translate([0, base_width*2.25, 0])
                     colon_base();
-                single_digit(base_width*2.125 + colon_spacing + colon_spacing/2);
-                single_digit(base_width*3.125 + colon_spacing + colon_spacing/2);
+                single_digit(base_width*2.125 + colon_spacing + colon_spacing/2, 0);
+                single_digit(base_width*3.125 + colon_spacing + colon_spacing/2, 1);
             
             }
         }
     }
     color("Green", alpha=0.6) {
         translate([0, 0, base_height/2])
+            translate([0, base_width + 5, diffuser_height/4])
+            cube([base_length-.28, total_base_width +  base_width*2 - 6, diffuser_height/2], center=true);
+    }
+    color("Green", alpha=0.6) {
+        translate([0, 0, base_height/2 + diffuser_height/4])
             translate([0, base_width + 5, diffuser_height/2])
-            cube([base_length, total_base_width +  base_width*2, diffuser_height], center=true);
+            cube([base_length-.56, total_base_width +  base_width*2 - 6.3, diffuser_height/2], center=true);
     }
 }
 
@@ -114,11 +119,26 @@ module all_cavities(visualization=false) {
 }
 
 // Create a module for a single digit
-module single_digit(offset_y = 0) {
+module single_digit(offset_y = 0, outside_bevel = 0) {
+    bevel_size = 4; // Size of the bevel
+    
     translate([0, offset_y, 0]) {
         difference() {
             // Main block
-            cube([base_length, base_width, base_height], center=true);             
+            difference() {
+                cube([base_length, base_width, base_height], center=true);
+                // Add bevels along the long edges of the segment face
+                if (outside_bevel == 1) {
+                    translate([0, base_width/2, base_height/2])
+                        rotate([45, 0, 0])
+                            cube([base_length, bevel_size, bevel_size], center=true);
+                } else if (outside_bevel == 2) {
+                    translate([0, -base_width/2, base_height/2])
+                        rotate([45, 0, 0])
+                            cube([base_length, bevel_size, bevel_size], center=true);
+                }
+            }
+            
             // LED channel
             led_channels();
             // Light pipe cavities
@@ -295,7 +315,7 @@ module d1_mini_cropped() {
     difference() {
         difference() {
             difference() {
-                scale([1.05, 1.05, .6])
+                scale([1, 1.05, .6])
                 import("./D1Mini_Bottom_part.stl");
 
                 // Cutting cube to remove bottom half
@@ -307,7 +327,7 @@ module d1_mini_cropped() {
                 cube([100, 100, 100], center=true);
         }
         // Cut right side
-        translate([64, 0, 0])
+        translate([63.7, 0, 0])
             cube([100, 100, 100], center=true);
     }
 }
