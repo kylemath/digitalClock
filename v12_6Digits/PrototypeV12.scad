@@ -1,14 +1,14 @@
 
 
 // WS2812 LED Strip Parameters - verified measurements
-led_spacing = 10.14;    // Increased from 10mm to compensate for shrinkage (1.4% increase)
+led_spacing = 10;    // Increased from 10mm to compensate for shrinkage (1.4% increase)
 strip_width = 10.05;      // 10mm wide LED strip
 strip_height = 3;      // Keep same
 tolerance = 0.7;       // Keep same
 led_size = 5;         // 5mm square LED cutouts
 
 // Updated Base Parameters
-base_width = 39.5;      // Optimized smaller base
+base_width = 40;      // Optimized smaller base
 base_length = 47;     // Adjusted proportionally
 base_height = 15;     // Increased by 25% from 25mm
 
