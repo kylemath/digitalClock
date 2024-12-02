@@ -46,12 +46,21 @@ light:
           name: "Show Time"
           update_interval: 1000ms
           lambda: |-
-            static const Color sign_color = Color(20, 255, 255);
+            static Color sign_color = Color(0, 255, 0);
             static const Color off_color = Color(0, 0, 0);
 
             auto time = id(sntp_time).now();
             int hours = time.hour;
             int minutes = time.minute;
+
+            // Choose brightness based on time
+            if (hours >= 20 || hours < 7) {
+              // Night time (8 PM - 7 AM) - dimmer red
+              sign_color = Color(0, 127, 0);  // GRB order: (Green=0, Red=127, Blue=0)
+            } else {
+              // Day time (7 AM - 8 PM) - full red
+              sign_color = Color(0, 255, 0);  // GRB order: (Green=0, Red=255, Blue=0)
+            }
 
             // Convert to 12-hour format
             if (hours > 12) hours -= 12;
