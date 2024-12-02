@@ -3,7 +3,7 @@
 // WS2812 LED Strip Parameters - verified measurements
 led_spacing = 10;    // Increased from 10mm to compensate for shrinkage (1.4% increase)
 strip_width = 10.05;      // 10mm wide LED strip
-strip_height = 3;      // Keep same
+strip_height = 2;      // Keep same
 tolerance = 0.7;       // Keep same
 led_size = 5;         // 5mm square LED cutouts
 
@@ -23,6 +23,10 @@ diffuser_height = .56;
 support_height = 8;        // Height from wall to LED strip
 support_width = 13;         // Thickness of support posts
 support_beam_height =10;   // Thickness of connecting beams
+support_attachment_width = 30;    // Width of connecting supports
+support_attachment_depth = 3;
+support_attachment_height = 5;   // Height of supports from base
+support_spacing = 30;           // Space between supports
 
 // vertical strip offset; // distance of strip from the center of the base
 vertical_strip_offset = 10;
@@ -74,6 +78,17 @@ leg_width = 7.5;        // Reduced from 15
 leg_thickness = 1.5;    // Reduced from 3
 leg_fillet = 1;         // Reduced from 2
 
+// Add case parameters
+case_thickness = 2;      // Thickness of case walls
+case_clearance = 1;      // Clearance between case and main body
+wire_exit_height = 5;    // Height of wire exit holes
+wire_exit_width = 3;     // Width of wire exit holes
+case_extension = 10;     // Extension length from the ends
+
+// Calculate total device dimensions for case
+total_device_length = base_length + 2*(case_clearance + case_thickness);
+total_device_height = base_height + 2*(case_clearance + case_thickness);
+total_device_width = total_base_width; // No increase in width
 
 // Wrap the entire assembly in rotations for printing orientation
 rotate([0, 0, 45])     // 45 degree rotation around Z axis
@@ -97,40 +112,57 @@ rotate([0, 0, 45])     // 45 degree rotation around Z axis
                     }
                 }
             }
-            color("Green", alpha=0.6) {
-                translate([0, 0, base_height/2])
-                    translate([0, base_width + 5, diffuser_height/4])
-                    cube([base_length-.28, total_base_width +  base_width*2 - 6, diffuser_height/2], center=true);
-            }
-            color("Green", alpha=0.6) {
-                translate([0, 0, base_height/2 + diffuser_height/4])
-                    translate([0, base_width + 5, diffuser_height/2])
-                    cube([base_length-.56, total_base_width +  base_width*2 - 6.3, diffuser_height/2], center=true);
-            }
-                color("Green", alpha=0.6) {
-                translate([0, 0, base_height/2 + diffuser_height/2])
-                    translate([0, base_width + 5, diffuser_height*.75])
-                    cube([base_length-.84, total_base_width +  base_width*2 - 6.6, diffuser_height/2], center=true);
-            }
+            // color("Green", alpha=0.6) {
+            //     translate([0, 0, base_height/2])
+            //         translate([0, base_width + 5, diffuser_height/4])
+            //         cube([base_length-.28, total_base_width +  base_width*2 - 6, diffuser_height/2], center=true);
+            // }
+            // color("Green", alpha=0.6) {
+            //     translate([0, 0, base_height/2 + diffuser_height/4])
+            //         translate([0, base_width + 5, diffuser_height/2])
+            //         cube([base_length-.56, total_base_width +  base_width*2 - 6.3, diffuser_height/2], center=true);
+            // }
+            //     color("Green", alpha=0.6) {
+            //     translate([0, 0, base_height/2 + diffuser_height/2])
+            //         translate([0, base_width + 5, diffuser_height*.75])
+            //         cube([base_length-.84, total_base_width +  base_width*2 - 6.6, diffuser_height/2], center=true);
+            // }
             
             // Updated leg positions - moved up and inward
-            translate([-base_width/2 - leg_width/2, -base_width*.75, -leg_height])
+            translate([-base_width/2 - leg_width/2, -base_width*2, -leg_height])
                 corner_leg();
-            translate([base_width/2 - leg_width/2, -base_width*.75, -leg_height])
+            translate([base_width/2 - leg_width/2, -base_width*1, -leg_height])
                 corner_leg();
-            translate([-base_width/2 - leg_width/2, base_width*3, -leg_height])
+            translate([-base_width/2 - leg_width/2, base_width*3.5, -leg_height])
                 corner_leg();
-            translate([base_width/2 - leg_width/2, base_width*3, -leg_height])
+            translate([base_width/2 - leg_width/2, base_width*3.5, -leg_height])
                 corner_leg();
+            translate([-base_width/2 - leg_width/2, base_width-support_width, -leg_height])
+                corner_leg();
+            translate([base_width/2 - leg_width/2, base_width-support_width, -leg_height])
+                corner_leg();
+            
+            // Add protective case
+            color("Gray", alpha=0.4) {
+                // Side covers with supports
+                translate([base_length/3, -total_base_width/2, -base_height/2 - support_attachment_height])
+                    side_cover_with_supports();
+                rotate([0, 0, 180])
+                    translate([0, -total_base_width*2, 0])
+                translate([base_length/3, total_base_width, -base_height/2 - support_attachment_height])
+                    side_cover_with_supports();
+            }
         }
 
         // D1 Mini with adjusted position for flipped orientation
         rotate([270,90,0])
-            translate([7.5,-9,-50])
+            translate([9,-9,-63])
                 rotate([0,90,0])
                     rotate([0,0,90])
                         d1_mini_cropped();
     }
+
+
 
 // All light cavities with corrected segment positions and mirroring
 module all_cavities(visualization=false) {
@@ -306,8 +338,6 @@ module colon_base() {
     }
 }
 
-
-
 module segment(length, width) {
     // Elongated hexagonal shape
     hull() {
@@ -318,18 +348,16 @@ module segment(length, width) {
     }
 }
 
-
-
 // holder for d1 mini
 module d1_mini_cropped() {
     difference() {
         difference() {
             difference() {
-                scale([1, 1.05, .6])
+                scale([1, 1, 1])
                 import("./D1Mini_Bottom_part.stl");
 
                 // Cutting cube to remove bottom half
-                translate([0, 0, -50])  
+                translate([0, 0, -51.5])  
                     cube([100, 100, 100], center=true);
             }
             // // Cut left side
@@ -341,7 +369,6 @@ module d1_mini_cropped() {
             cube([100, 100, 100], center=true);
     }
 }
-
 
 // Add leg module
 module corner_leg() {
@@ -363,4 +390,27 @@ module corner_leg() {
         translate([leg_thickness, leg_thickness, -leg_height-1])
             cube([leg_width-2*leg_thickness, leg_width*4-2*leg_thickness, leg_height+1]);
     }
+}
+
+// Simplified support modules
+module side_cover_with_supports() {
+    rotate([0, 0, 90]) {
+        // Main side cover
+        translate([1, 0, 4])
+        side_cover();
+        
+        // Simple cube support on each end
+        translate([3, 0, 12])
+            cube([support_attachment_depth-1, base_length-15, support_attachment_height]);
+             // Simple cube support on each end
+        translate([3, 0, 10])
+            cube([support_attachment_depth-1, 3, support_attachment_height+2]);
+        translate([3, base_length-18, 10])
+            cube([support_attachment_depth-1, 3, support_attachment_height+2]);
+        
+       }
+}
+
+module side_cover() {
+    cube([case_thickness, base_length-15, total_device_height-8]);
 }
