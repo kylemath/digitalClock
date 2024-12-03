@@ -12,14 +12,14 @@ This project provides multiple ways to build your own digital clock:
 2. 6-Digit Monolithic Clock
 3. 4-Digit Monolithic Clock
 
-![Project Overview Image](path/to/overview-image.jpg)
+![Project Overview Image](./pictures/overview.jpg)
 
 ## Designs
 
 ### 1. Modular Single Digit Design
 Individual digit modules that can be connected together to create custom configurations.
 
-![Modular Digit Image](path/to/modular-image.jpg)
+![Modular Digit Image](./pictures/modular.jpg)
 
 **Features:**
 - Stackable design
@@ -32,7 +32,7 @@ Individual digit modules that can be connected together to create custom configu
 ### 2. 6-Digit Monolithic Clock
 Perfect for displaying hours, minutes, and seconds (HH:MM:SS).
 
-![6-Digit Clock Image](path/to/6digit-image.jpg)
+![6-Digit Clock Image](./pictures/6digit.jpg)
 
 **Features:**
 - All-in-one design
@@ -44,7 +44,7 @@ Perfect for displaying hours, minutes, and seconds (HH:MM:SS).
 ### 3. 4-Digit Monolithic Clock
 Compact design for displaying hours and minutes (HH:MM).
 
-![4-Digit Clock Image](path/to/4digit-image.jpg)
+![4-Digit Clock Image](./pictures/4digit.jpg)
 
 **Features:**
 - Compact size
