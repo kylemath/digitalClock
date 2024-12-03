@@ -112,16 +112,16 @@ rotate([0, 0, 45])     // 45 degree rotation around Z axis
                     }
                 }
             }
-            // color("Green", alpha=0.6) {
-            //     translate([0, 0, base_height/2])
-            //         translate([0, base_width + 5, diffuser_height/4])
-            //         cube([base_length-.28, total_base_width +  base_width*2 - 6, diffuser_height/2], center=true);
-            // }
-            // color("Green", alpha=0.6) {
-            //     translate([0, 0, base_height/2 + diffuser_height/4])
-            //         translate([0, base_width + 5, diffuser_height/2])
-            //         cube([base_length-.56, total_base_width +  base_width*2 - 6.3, diffuser_height/2], center=true);
-            // }
+            color("Green", alpha=0.6) {
+                translate([0, 0, base_height/2])
+                    translate([0, base_width + 5, diffuser_height/4])
+                    cube([base_length-.28, total_base_width +  base_width*2 - 6, diffuser_height/2], center=true);
+            }
+            color("Green", alpha=0.6) {
+                translate([0, 0, base_height/2 + diffuser_height/4])
+                    translate([0, base_width + 5, diffuser_height/2])
+                    cube([base_length-.56, total_base_width +  base_width*2 - 6.3, diffuser_height/2], center=true);
+            }
             //     color("Green", alpha=0.6) {
             //     translate([0, 0, base_height/2 + diffuser_height/2])
             //         translate([0, base_width + 5, diffuser_height*.75])
