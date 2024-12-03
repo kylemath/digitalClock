@@ -12,14 +12,16 @@ This project provides multiple ways to build your own digital clock:
 2. 6-Digit Monolithic Clock
 3. 4-Digit Monolithic Clock
 
-![Project Overview Image](./pictures/overview.jpg)
+![Project Overview Image](./pictures/MultiDigitDev.png)
 
 ## Designs
 
 ### 1. Modular Single Digit Design
 Individual digit modules that can be connected together to create custom configurations.
 
-![Modular Digit Image](./pictures/modular.jpg)
+![Single Digit Development](./pictures/SingleDigitDev.png)
+![Single Digit Construction](./pictures/SingleDigitConstruct.png)
+![Single Digit Final](./pictures/singleDigit.png)
 
 **Features:**
 - Stackable design
@@ -32,7 +34,9 @@ Individual digit modules that can be connected together to create custom configu
 ### 2. 6-Digit Monolithic Clock
 Perfect for displaying hours, minutes, and seconds (HH:MM:SS).
 
-![6-Digit Clock Image](./pictures/6digit.jpg)
+![6-Digit Clock](./pictures/sixDigit.png)
+![6-Digit Construction](./pictures/sixDigitConstruct.png)
+![6-Digit Construction Back](./pictures/sixDigitConstructBack.png)
 
 **Features:**
 - All-in-one design
@@ -44,7 +48,8 @@ Perfect for displaying hours, minutes, and seconds (HH:MM:SS).
 ### 3. 4-Digit Monolithic Clock
 Compact design for displaying hours and minutes (HH:MM).
 
-![4-Digit Clock Image](./pictures/4digit.jpg)
+![4-Digit Clock](./pictures/fourDigit.png)
+![4-Digit Construction](./pictures/fourDigitConstruct.png)
 
 **Features:**
 - Compact size
@@ -52,6 +57,9 @@ Compact design for displaying hours and minutes (HH:MM).
 - Hour and minute display
 
 [Watch Assembly Tutorial](youtube-link-here)
+
+## Wiring Instructions
+![D1 Wiring Diagram](./pictures/D1Wiring.png)
 
 ## Required Materials
 
