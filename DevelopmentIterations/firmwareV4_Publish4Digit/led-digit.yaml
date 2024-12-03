@@ -1,0 +1,112 @@
+# 'esphome --dashboard run ./firmwareV4/led-digit.yaml --device OTA
+esphome:
+  name: seven-seg-test
+  friendly_name: Seven Segment Test
+
+esp8266:
+  board: d1_mini
+
+# Add this time component
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: America/Edmonton # Change this to your timezone
+
+logger:
+
+ota:
+  platform: esphome
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  ap:
+    ssid: "Seven-Seg-Test"
+    password: "configureme"
+
+light:
+  - platform: neopixelbus
+    id: led_strip
+    name: "LED Strip"
+    type: RGB
+    pin: GPIO4
+    num_leds: 36
+    variant: WS2812
+    default_transition_length: 0s
+    restore_mode: ALWAYS_ON
+    on_turn_on:
+      then:
+        - light.turn_on:
+            id: led_strip
+            effect: "Show Time"
+    effects:
+      - addressable_lambda:
+          name: "Show Time"
+          update_interval: 1000ms
+          lambda: |-
+            static const Color sign_color = Color(200, 60, 60);
+            static const Color off_color = Color(0, 0, 0);
+
+            auto time = id(sntp_time).now();
+            int hours = time.hour;
+            int minutes = time.minute;
+
+            // Convert to 12-hour format
+            if (hours > 12) hours -= 12;
+            if (hours == 0) hours = 12;
+
+            // Keep your existing SEGMENTS array and display_digit function exactly as they are
+            static const uint8_t SEGMENTS[10][8] = {
+              {1, 0, 1, 1, 1, 1, 0, 1},    // 0
+              {0, 0, 0, 1, 0, 0, 0, 1},    // 1
+              {1, 1, 1, 0, 0, 1, 1, 1},    // 2
+              {0, 1, 1, 1, 0, 1, 1, 1},    // 3
+              {0, 1, 0, 1, 1, 0, 1, 1},    // 4
+              {0, 1, 1, 1, 1, 1, 1, 0},    // 5
+              {1, 1, 1, 1, 1, 1, 1, 0},    // 6
+              {0, 0, 0, 1, 0, 1, 0, 1},    // 7
+              {1, 1, 1, 1, 1, 1, 1, 1},    // 8
+              {0, 1, 1, 1, 1, 1, 1, 1}     // 9
+            };
+
+            // Function to display a number at a specific digit position
+            auto display_digit = [&](int bottom_start, int top_start, int number) {
+              if (number < 0 || number > 9) return;
+              
+              // Bottom row LEDs
+              it[bottom_start].set(SEGMENTS[number][0] ? sign_color : off_color);      // i
+              it[bottom_start + 1].set(SEGMENTS[number][1] ? sign_color : off_color);  // ii
+              it[bottom_start + 2].set(SEGMENTS[number][2] ? sign_color : off_color);  // iii
+              it[bottom_start + 3].set(SEGMENTS[number][3] ? sign_color : off_color);  // iv
+              
+              // Top row LEDs
+              it[top_start].set(SEGMENTS[number][4] ? sign_color : off_color);      // v
+              it[top_start - 1].set(SEGMENTS[number][5] ? sign_color : off_color);  // vi
+              it[top_start - 2].set(SEGMENTS[number][6] ? sign_color : off_color);  // vii
+              it[top_start - 3].set(SEGMENTS[number][7] ? sign_color : off_color);  // viii
+            };
+
+            // Clear all LEDs first
+            for (int i = 0; i < it.size(); i++) {
+              it[i].set(off_color);
+            }
+
+            // Display hours and minutes using your working LED positions
+            if (hours < 10) {
+              // Hours < 10, leave first digit blank
+              display_digit(4, 31, hours);          // Hours in ones position
+            } else {
+              // Hours 10-12, show both digits
+              display_digit(0, 35, hours / 10);     // Hours tens
+              display_digit(4, 31, hours % 10);     // Hours ones
+            }
+
+            // Always show both digits for minutes
+            display_digit(10, 25, minutes / 10);    // Minutes tens
+            display_digit(14, 21, minutes % 10);    // Minutes ones
+
+            // Light up both colon pairs (always on)
+            it[8].set(sign_color);   // First colon bottom
+            it[27].set(sign_color);  // Second colon bottom

@@ -1,0 +1,33 @@
+{
+  "storage_version": 1,
+  "name": "6-digit-clock-inone",
+  "friendly_name": "SixDigit Clock In One",
+  "comment": null,
+  "esphome_version": "2024.10.3",
+  "src_version": 1,
+  "address": "6-digit-clock-inone.local",
+  "web_port": null,
+  "esp_platform": "ESP8266",
+  "build_path": "./firmwareV5_Publish6Digit/.esphome/build/6-digit-clock-inone",
+  "firmware_bin_path": "./firmwareV5_Publish6Digit/.esphome/build/6-digit-clock-inone/.pioenvs/6-digit-clock-inone/firmware.bin",
+  "loaded_integrations": [
+    "esp8266",
+    "esphome",
+    "light",
+    "logger",
+    "md5",
+    "mdns",
+    "neopixelbus",
+    "network",
+    "ota",
+    "preferences",
+    "safe_mode",
+    "sntp",
+    "socket",
+    "time",
+    "wifi"
+  ],
+  "no_mdns": false,
+  "framework": "arduino",
+  "core_platform": "esp8266"
+}
