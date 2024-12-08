@@ -8,8 +8,8 @@
   "address": "6-digit-clock-inone.local",
   "web_port": null,
   "esp_platform": "ESP8266",
-  "build_path": "./firmwareV5_Publish6Digit/.esphome/build/6-digit-clock-inone",
-  "firmware_bin_path": "./firmwareV5_Publish6Digit/.esphome/build/6-digit-clock-inone/.pioenvs/6-digit-clock-inone/firmware.bin",
+  "build_path": "firmwareV5_SixDigitMonolith/.esphome/build/6-digit-clock-inone",
+  "firmware_bin_path": "firmwareV5_SixDigitMonolith/.esphome/build/6-digit-clock-inone/.pioenvs/6-digit-clock-inone/firmware.bin",
   "loaded_integrations": [
     "esp8266",
     "esphome",

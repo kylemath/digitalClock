@@ -261,7 +261,7 @@ void setup() {
   led_strip->set_flash_transition_length(0);
   led_strip->set_gamma_correct(2.8f);
   light_addressablelambdalighteffect_id = new light::AddressableLambdaLightEffect("Show Time", [=](light::AddressableLight & it, Color current_color, bool initial_run) -> void {
-      #line 49 "./firmwareV5_Publish6Digit/led-digit.yaml"
+      #line 49 "firmwareV5_SixDigitMonolith/led-digit.yaml"
       static Color sign_color = Color(0, 255, 0);
       static const Color off_color = Color(0, 0, 0);
       
