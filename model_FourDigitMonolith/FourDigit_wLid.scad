@@ -94,9 +94,25 @@ side_wall_offset = 2;  // How far the walls stick out from the base
 lid_fit_tolerance = 1;  // Gap between lid walls and clock body
 
 // Add parameters for power plug cutout
-power_cutout_width = 20;    // Width of the cutout
-power_cutout_height = 12;   // Increased height by 2mm
+power_cutout_width = 15;    // Width of the cutout
 power_cutout_offset = 0;    // Offset from center (0 = centered)
+
+// Add keyhole parameters at the top with other parameters
+keyhole_large_diameter = 7.14;  // 9/32 inch
+keyhole_small_diameter = 3.175; // 1/8 inch
+keyhole_spacing = 100;          // 100mm between centers
+keyhole_offset_from_edge = 20;  // Distance from back edge
+
+// Add lid parameters right after the mounting hole parameters
+wall_thickness = 2;
+lid_height = 3;
+screw_head_diameter = 10;  // Increased from 6mm to 8mm for wider countersink
+screw_head_height = 3;    // Keep same countersink depth
+
+// Add grating parameters at the top with other parameters
+grating_size = 4;        // Size of each square hole
+grating_spacing = 8;     // Center-to-center spacing of holes
+grating_border = 10;     // Border from edges
 
 // Update the back_lid module with corrected leg attachment positions
 module back_lid() {
@@ -175,11 +191,11 @@ module back_lid() {
                 cylinder(d2=mounting_hole_diameter, d1=screw_head_diameter, h=screw_head_height, center=true, $fn=20);
         }
         
-        // Ventilation holes pattern
-        for(x = [-30:10:30]) {
-            for(y = [-30:10:30]) {
+        // Square grating pattern
+        for(x = [-30:grating_spacing:30]) {
+            for(y = [-30:grating_spacing:30]) {
                 translate([x, y, 0])
-                    cylinder(d=3, h=lid_height + 1, center=true, $fn=20);
+                    cube([grating_size, grating_size, lid_height + 1], center=true);
             }
         }
         
@@ -191,30 +207,29 @@ module back_lid() {
             cube([side_wall_height,  // Make height match full wall height
                   power_cutout_width, 
                   side_wall_thickness * 2], center=true);
-    }
-}
 
-// Update support_post module to include matching taper
-module support_post(x_pos, y_pos) {
-    difference() {
-        // Tapered post
-        translate([x_pos, y_pos, -10])
-            hull() {
-                // Bottom - full size
-                translate([0, 0, -support_height/2])
-                    cube([support_width, support_width, 0.1], center=true);
-                // Top - tapered to match leg attachment
-                translate([0, 0, support_height/2])
-                    cube([support_width + press_fit_tolerance * 1.5,  // Match the leg attachment taper
-                         support_width + press_fit_tolerance * 1.5,
-                         0.1], center=true);
-            }
+        // Add keyhole cutouts
+        // Left keyhole
+        translate([-15, 50, 0]) {
+            // Large circle
+            cylinder(d=keyhole_large_diameter, h=lid_height*2, center=true, $fn=30);
+            // Small slot above
+            translate([-keyhole_large_diameter/1.66, 0, 0])
+                cylinder(d=keyhole_small_diameter, h=lid_height*2, center=true, $fn=20);
+        }
         
-        // Add mounting hole
-        translate([x_pos, y_pos, -10])
-            cylinder(d=mounting_hole_diameter, h=support_height + 1, center=true, $fn=20);
-    }
-}
+        // Right keyhole
+        translate([-15, -50, 0]) {
+            // Large circle
+            cylinder(d=keyhole_large_diameter, h=lid_height*2, center=true, $fn=30);
+            // Small slot above
+            translate([-keyhole_large_diameter/1.66  , 0, 0])
+                cylinder(d=keyhole_small_diameter, h=lid_height*2, center=true, $fn=20);
+        }
+    } 
+}   
+
+
 
 // Update leg_attachment module for more gradual taper
 module leg_attachment() {
@@ -249,11 +264,6 @@ module leg_attachment() {
     }
 }
 
-// Add lid parameters right after the mounting hole parameters
-wall_thickness = 2;
-lid_height = 3;
-screw_head_diameter = 8;  // Increased from 6mm to 8mm for wider countersink
-screw_head_height = 3;    // Keep same countersink depth
 
 // Replace the final union() with this conditional render
 if (render_both) {
@@ -409,10 +419,11 @@ if (render_both) {
 }
 // Use the cropped version with your transformations
 rotate([270,90,0])
-    translate([7.5,26,0])
+    translate([8,26,0])
     rotate([0,90,0])
         // rotate([0,0,90])
-        d1_mini_cropped();
+        scale([1, 1, 1.5])
+            d1_mini_cropped();
 // All light cavities with corrected segment positions and mirroring
 module all_cavities(visualization=false) {
     rotate([0, 0, 90]) {
@@ -512,8 +523,6 @@ module colon_base() {
     }
 }
 
-
-
 module segment(length, width) {
     // Elongated hexagonal shape
     hull() {
@@ -526,60 +535,18 @@ module segment(length, width) {
 // Support post module with keyhole mounting slot
 module support_post(x_pos, y_pos) {
     difference() {
+       hull() {
         // Original post
-        translate([x_pos, y_pos, -10])
-            cube([support_width, support_width, support_height], center=true);
-        
+        translate([x_pos, y_pos, -7.5-support_height])
+            cube([support_width - 1.5, support_width - 1.5, 1], center=true);
+        translate([x_pos, y_pos, 0])
+            cube([support_width, support_width, 1], center=true);
+       }
         // Add mounting hole
         translate([x_pos, y_pos, -10])
-            cylinder(d=mounting_hole_diameter, h=support_height + 1, center=true, $fn=20);
+            cylinder(d=mounting_hole_diameter, h=support_height + 10, center=true, $fn=20);
     }
 }
-
-// New module for connecting beam
-module connecting_beam(x_pos) {
-    translate([x_pos, 0, -support_height + support_beam_height/2])
-        cube([support_width, total_base_width + support_width + 10, support_beam_height], center=true);
-}
-
-// Add vertical beam module
-module vertical_connecting_beam(y_pos) {
-    translate([0, y_pos, -support_height + support_beam_height/2])
-        cube([base_length + support_width + 10, support_width, support_beam_height], center=true);
-}
-// Module to center and orient the LED clip at origin
-module led_clip() {
-    difference() {
-        // Center at origin and orient flat
-        translate([47.5, 6, -7.5])  
-            rotate([0, 0, 0])  
-            scale([1.1, 1.1, 1.1])
-                import("./ARGB_solderless_clip_3_wires_1.stl");
-        
-        // VERY obvious cutting block - removes about half the clip
-        translate([0, 0, -16.1])  // Raised higher to cut more
-            cube([20, 20, 20], center=true);  // Much larger cube
-    }
-}
-
-
-
-// LED clips
-
-    // rotate([90, 0, 180])
-    // translate([-vertical_strip_offset,  -1.45,  total_base_width/2+ 4.5])
-    //     led_clip(); 
-
-    // rotate([90, 0, 180])
-    // translate([vertical_strip_offset,  -1.45,  total_base_width/2 + 4.5])
-    //     led_clip(); 
-  
-    // rotate([90, 0, 0])
-    // translate([vertical_strip_offset,  -1.45,  total_base_width/2 + 4.5])
-    //     led_clip(); 
-    // rotate([90, 0, 0])
-    // translate([-vertical_strip_offset, -1.45,  total_base_width/2 + 4.5])
-    //     led_clip(); 
 
 
 // holder for d1 mini
