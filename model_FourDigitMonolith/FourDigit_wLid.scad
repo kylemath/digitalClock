@@ -73,10 +73,6 @@ mounting_hole_diameter = 3.2;  // For M3 screws
 mounting_hole_inset = 4;      // Distance from edges
 mounting_post_diameter = 7;    // Diameter of screw posts
 
-// Add at the top with other parameters
-render_part = "main"; // Set to "main" or "lid"
-render_both = true;  // Set to true to see both parts
-
 // Add new parameters for press-fit
 press_fit_tolerance = 0.4;  // Adjust this for tighter/looser fit
 press_fit_height = 8;      // Height of the press-fit attachments
@@ -110,43 +106,73 @@ screw_head_diameter = 10;  // Increased from 6mm to 8mm for wider countersink
 screw_head_height = 3;    // Keep same countersink depth
 
 // Add grating parameters at the top with other parameters
-grating_size = 4;        // Size of each square hole
-grating_spacing = 8;     // Center-to-center spacing of holes
+grating_size = 5.5;        // 5mm LED + 0.5mm tolerance
+grating_spacing = 10;     // 10mm between LED centers
 grating_border = 10;     // Border from edges
 
-// Update the back_lid module with corrected leg attachment positions
+lid_leg_offset = 7;
+
+// Update the back_lid module
 module back_lid() {
     difference() {
         union() {
-            // Main lid body - flat plate - extended by 1mm in each direction
-            cube([base_length + 2, total_base_width + side_addon * 2 + 3, lid_height], center=true);
+            // Main lid body - matches base dimensions exactly
+            cube([base_length, total_base_width + side_addon * 2, lid_height], center=true);
             
-            // Add side walls on shorter ends - moved down by 1.5mm and with tolerance
-            // Left wall
-            translate([-base_length/2 - side_wall_thickness/2 - lid_fit_tolerance, 0, side_wall_height/2 - 1.5])
+            // Left wall - split into sections to avoid leg holes
+            translate([-base_length/2 + side_wall_thickness/2, 0, side_wall_height/2 - 1.5 ]) {
+                translate([0, 0, -.5])
+                // Middle section
                 cube([side_wall_thickness, 
-                      total_base_width + side_addon * 2 + 1 + side_wall_offset*2, 
-                      side_wall_height], center=true);
+                      total_base_width + side_addon * 2 - support_width*4.8, 
+                      side_wall_height - lid_leg_offset], center=true);
+                      
+                // Top section
+                translate([0, (total_base_width + side_addon * 2)/2 - support_width/2 -1, -.5])
+                    cube([side_wall_thickness, 
+                          support_width + 2, 
+                          side_wall_height - lid_leg_offset], center=true);
+                          
+                // Bottom section
+                translate([0, -(total_base_width + side_addon * 2)/2 + support_width/2 +1, -.5])
+                    cube([side_wall_thickness, 
+                          support_width +2, 
+                          side_wall_height - lid_leg_offset], center=true);
+            }
             
-            // Right wall
-            translate([base_length/2 + side_wall_thickness/2 + lid_fit_tolerance, 0, side_wall_height/2 - 1.5])
+            // Right wall - split into sections to avoid leg holes
+            translate([base_length/2 - side_wall_thickness/2, 0, side_wall_height/2 - 2]) {
+                // Middle section
                 cube([side_wall_thickness, 
-                      total_base_width + side_addon * 2 + 1 + side_wall_offset*2, 
-                      side_wall_height], center=true);
+                      total_base_width +  side_addon * 2 - support_width*4.8, 
+                      side_wall_height - lid_leg_offset], center=true);
                       
-            // Front wall
-            translate([0, -(total_base_width + side_addon * 2 + 1)/2 - side_wall_thickness/2 - lid_fit_tolerance, side_wall_height/2 - 1.5])
-                cube([base_length + side_wall_offset*2, 
-                      side_wall_thickness,
-                      side_wall_height], center=true);
+                // Top section
+                translate([0, (total_base_width + side_addon * 2)/2 - support_width/2 - 1, 0])
+                    cube([side_wall_thickness, 
+                          support_width + 2, 
+                          side_wall_height - lid_leg_offset +.5], center=true);
+                          
+                // Bottom section
+                translate([0, -(total_base_width + side_addon * 2)/2 + support_width/2 +1, 0])
+                    cube([side_wall_thickness, 
+                          support_width + 2, 
+                          side_wall_height - lid_leg_offset], center=true);
+            }
                       
-            // Back wall
-            translate([0, (total_base_width + side_addon * 2 + 1)/2 + side_wall_thickness/2 + lid_fit_tolerance, side_wall_height/2 - 1.5])
-                cube([base_length + side_wall_offset*2, 
+            // Front wall - solid piece
+            translate([0, -(total_base_width + side_addon * 2)/2 + side_wall_thickness/2, side_wall_height/2 - 2])
+                cube([base_length, 
                       side_wall_thickness,
-                      side_wall_height], center=true);
+                      side_wall_height - lid_leg_offset], center=true);
+                      
+            // Back wall - solid piece
+            translate([0, (total_base_width + side_addon * 2)/2 - side_wall_thickness/2, side_wall_height/2 - 2])
+                cube([base_length, 
+                      side_wall_thickness,
+                      side_wall_height - lid_leg_offset], center=true);
             
-            // Add press-fit attachments for each leg - moved down 10mm more
+            // Add press-fit attachments for each leg
             // Front right
             translate([-base_length/2 + support_width/2, total_base_width/2-support_width/2-3, -side_wall_height/2 + 10])
                 leg_attachment();
@@ -191,21 +217,21 @@ module back_lid() {
                 cylinder(d2=mounting_hole_diameter, d1=screw_head_diameter, h=screw_head_height, center=true, $fn=20);
         }
         
-        // Square grating pattern
-        for(x = [-30:grating_spacing:30]) {
-            for(y = [-30:grating_spacing:30]) {
+        // Square grating pattern - skip outer rows
+        for(x = [-20:grating_spacing:20]) {  // Changed from -30:grating_spacing:30
+            for(y = [-20:grating_spacing:20]) {
                 translate([x, y, 0])
                     cube([grating_size, grating_size, lid_height + 1], center=true);
             }
         }
         
-        // Add power plug cutout in right wall (side wall)
-        translate([base_length/2 + side_wall_thickness/2 + lid_fit_tolerance, 
-                  power_cutout_offset,
-                  side_wall_height/4  +4  ])  // Moved center point down to extend cutout to bottom
-            rotate([0, 90, 0])  // Rotate the cutout for the side wall
-            cube([side_wall_height,  // Make height match full wall height
-                  power_cutout_width, 
+        // Add power plug cutout in right wall (adjusted position for flush wall)
+        translate([base_length/2 - side_wall_thickness/2, 
+                  power_cutout_offset-2,
+                  side_wall_height/4 + 4])
+            rotate([0, 90, 0])
+            cube([side_wall_height - 5,  // Adjusted height to match new wall height
+                  power_cutout_width + 5.5, 
                   side_wall_thickness * 2], center=true);
 
         // Add keyhole cutouts
@@ -265,85 +291,9 @@ module leg_attachment() {
 }
 
 
-// Replace the final union() with this conditional render
-if (render_both) {
-    union() {
-        // Main clock part - move less to the left
-        translate([-base_length/2 - 5, 0, 0]) {  // Changed from -base_length - 10 to -base_length/2 - 5
-            union() {
-                color("Yellow", alpha=0.9) {
-                    difference() {
-                        union() {
-                            // Existing digits and colon
-                            single_digit(-base_width*1.5 - colon_spacing/2);
-                            single_digit(-base_width*0.5 - colon_spacing/2);
-                            translate([0, 0, 0])
-                                colon_base();
-                            single_digit(base_width*0.5 + colon_spacing/2);
-                            single_digit(base_width*1.5 + colon_spacing/2);
-                            
-                            // Support posts
-                            support_post(-base_length/2 +support_width/2, total_base_width/2-support_width/2-3);    // Front right
-                            support_post(-base_length/2 +support_width/2, -total_base_width/2+support_width/2+3);   // Front left
-                            support_post(base_length/2 -support_width/2, -total_base_width/2+support_width/2+3);    // Back left
-                            support_post(base_length/2 -support_width/2, total_base_width/2-support_width/2-3);     // Back right
-                            
-                            // Add left extension block with LED channel
-                            difference() {
-                                translate([0, -total_base_width/2 - side_addon/2, 0])
-                                    cube([base_length, side_addon, base_height], center=true);
-                                // LED channel cutout
-                                translate([vertical_strip_offset-strip_width/2 - tolerance/2 - clip_space/2, -total_base_width/2 - side_addon + 2, -base_height/2])
-                                    cube([strip_width + tolerance + clip_space, side_addon, strip_height + tolerance + 10]);
-                                translate([-vertical_strip_offset-strip_width/2 - tolerance/2 -clip_space/2, -total_base_width/2 - side_addon + 2, -base_height/2])
-                                    cube([strip_width + tolerance + clip_space *4.4, side_addon, strip_height + tolerance + 10]);
-                                
-                                // LED channel cutouts for side addon
-                                translate([vertical_strip_offset-strip_width/2 - tolerance/2 - clip_space/2, -total_base_width/2 - side_addon + 2, -base_height/2])
-                                    cube([strip_width + tolerance + clip_space, side_addon, strip_height + tolerance + 2]);
-                                translate([-vertical_strip_offset-strip_width/2 - tolerance/2 -clip_space/2, -total_base_width/2 - side_addon + 2, -base_height/2])
-                                    cube([strip_width + tolerance + clip_space *4.4, side_addon, strip_height + tolerance + 2]);
-
-
-                                translate([-vertical_strip_offset-strip_width/2 - tolerance/2 -clip_space/2, -total_base_width/2 - side_addon + 2, -base_height/2])
-                                    rotate([0, 90,0])
-                                    cube([strip_width + tolerance + clip_space *4.4, side_addon, strip_height + tolerance + 2]);
-                                
-  
-                            }
-                            
-                            // Add right extension block with LED channel
-                            difference() {
-                                translate([0, total_base_width/2 + side_addon/2, 0])
-                                    cube([base_length, side_addon, base_height], center=true);
-                                // LED channel cutout
-                                translate([vertical_strip_offset-strip_width/2 - tolerance/2 - clip_space/2, total_base_width/2, -base_height/2])
-                                    cube([strip_width + tolerance + clip_space, 10, strip_height + tolerance + 10]);
-                                translate([-vertical_strip_offset-strip_width/2 - tolerance/2 -clip_space/2, total_base_width/2, -base_height/2])
-                                    cube([strip_width + tolerance + clip_space*4.4, 10, strip_height + tolerance+10]);
-                            }
-                        }
-                    }
-                }
-                color("Green", alpha=0.6) {
-                    translate([0, 0, base_height/2])
-                        translate([0, 0, diffuser_height/2])
-                        cube([base_length, total_base_width + side_addon * 2, diffuser_height], center=true);
-                }
-            }
-        }
-        
-        // Lid - move up by another lid_height
-        translate([base_length/2 + 5, 0, side_wall_height/2 - lid_height + 1]) {  // Added another lid_height
-            rotate([180, 0, 0])  // Flip upside down
-            color("Blue", alpha=0.3) {
-                back_lid();
-            }
-        }
-    }
-} else {
-    // Original conditional render for individual parts
-    if (render_part == "main") {
+union() {
+    // Main clock part - move less to the left
+    translate([-base_length/2 - 5, 0, 0]) {  // Changed from -base_length - 10 to -base_length/2 - 5
         union() {
             color("Yellow", alpha=0.9) {
                 difference() {
@@ -383,7 +333,7 @@ if (render_both) {
                                 rotate([0, 90,0])
                                 cube([strip_width + tolerance + clip_space *4.4, side_addon, strip_height + tolerance + 2]);
                             
-  
+
                         }
                         
                         // Add right extension block with LED channel
@@ -404,25 +354,26 @@ if (render_both) {
                     translate([0, 0, diffuser_height/2])
                     cube([base_length, total_base_width + side_addon * 2, diffuser_height], center=true);
             }
-            // // Use the cropped version with your transformations
-            // rotate([270,90,0])
-            //     translate([7.5,-12,0])
-            //     rotate([0,90,0])
-            //         // rotate([0,0,90])
-            //         d1_mini_cropped();
         }
-
-
-        } else if (render_part == "lid") {
+    }
+    
+    // Lid - back to original position beside clock
+        // translate([-base_length/2 - 5, 0, -20]) {  // Position directly above clock
+    translate([base_length/2 + 5, 0, side_wall_height/2 - lid_height + 1]) {
+        rotate([180, 0, 0])  // Flip upside down
+        color("Blue", alpha=0.3) {
             back_lid();
         }
+    }
 }
+
 // Use the cropped version with your transformations
 rotate([270,90,0])
     translate([8,26,0])
     rotate([0,90,0])
         // rotate([0,0,90])
         scale([1, 1, 1.5])
+            translate([0,.5,.5])
             d1_mini_cropped();
 // All light cavities with corrected segment positions and mirroring
 module all_cavities(visualization=false) {
@@ -464,23 +415,33 @@ module led_channels() {
 }
 
 // Single light pipe cavity with elongating shape
-module light_cavity(led_pos, segment_pos, is_horizontal=false) {
+module light_cavity(led_pos, segment_pos, is_horizontal=false, is_center=false) {
     z_bottom = -base_height/2 + strip_height;
     z_top = base_height/2;
     total_height = z_top - z_bottom;
+
+    // Bottom (at LED) - small square with centered tolerance
+    translate([led_pos[0] - (led_size + tolerance)/2, 
+              led_pos[1] - (led_size + tolerance)/2, 
+              z_bottom])
+        cube([led_size + tolerance, led_size + tolerance, 2]);            
+        
     hull() {
-        // Bottom (at LED) - small square exactly 5mm + tolerance
-        translate([led_pos[0] - led_size/2, led_pos[1] - led_size/2, z_bottom])
-            cube([led_size + tolerance, led_size + tolerance, 2]);            
+        // Bottom (at LED) - small square exactly 5mm
+        translate([led_pos[0] - led_size/2, 
+                  led_pos[1] - led_size/2, 
+                  z_bottom + 2])
+            cube([led_size, led_size, 2]);            
         
         // Top (at segment) - full segment shape
         translate([segment_pos[0], segment_pos[1], z_top ]) {
             rotate([0, 0, is_horizontal ? 0 : 90])
-                linear_extrude(height=2)
-                    segment(segment_h_length, segment_width);
+                linear_extrude(height=.1)
+                    segment(is_center ? segment_h_length*.2 : segment_h_length, segment_width);
         }
     }
 }
+
 
 // Update colon cavity module
 module colon_cavity(led_pos, dot_pos) {
@@ -554,7 +515,7 @@ module d1_mini_cropped() {
     difference() {
         import("./D1Mini_Bottom_part.stl");
         // Cutting cube to remove bottom half
-        translate([0, 0, -50])  // Adjust Z position to cut at desired height
+        translate([0, 0, -51])  // Adjust Z position to cut at desired height
             cube([100, 100, 100], center=true);  // Make sure cube is large enough
     }
 }
