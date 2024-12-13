@@ -3,6 +3,8 @@
 A collection of 3D-printed digital clock designs powered by ESPHome and Home Assistant. This project includes both modular and monolithic clock designs that you can build according to your needs.
 
 📦 **GitHub Repository**: [kylemath/digitalclock](https://github.com/kylemath/digitalclock)
+🖨️ **Printables**: [ESP32 Seven Segment Digital Clock](https://www.printables.com/model/1101964-esp32-seven-segment-single-print-digital-clock-ws2)
+🎨 **Thingiverse**: [ESP Digital Clock Collection](https://www.thingiverse.com/thing:6861353)
 
 ## Overview
 
@@ -42,15 +44,25 @@ Perfect for displaying hours, minutes, and seconds (HH:MM:SS).
 - Complete time display
 
 ### 3. 4-Digit Monolithic Clock
-Compact design for displaying hours and minutes (HH:MM).
+Available in two versions:
+1. Original compact design
+2. New version with integrated back lid (_wLid)
 
 ![4-Digit Clock](./pictures/fourDigit.png)
 ![4-Digit Construction](./pictures/fourDigitConstruct.png)
 
 **Features:**
 - Compact size
-- Perfect for desks
+- Perfect for desks or wall mounting
 - Hour and minute display
+- New _wLid version includes:
+  - Clean back design with integrated lid
+  - Hidden wire management
+  - Keyhole mounting slots for easy wall hanging
+  - No visible screws from the front
+  - Same firmware compatibility as original version
+  - Improved thermal management
+  - More robust construction
 
 # ESP Digital Clock Collection
 
@@ -227,12 +239,15 @@ Happy printing! If you make one, please share your results!
 5. Install ESP board
 6. Attach back cover
 
-### 4-Digit Monolithic
+### 4-Digit Monolithic (_wLid version)
 1. Print main housing
-2. Print diffusers
-3. Cut LED strips to size
+2. Print back lid
+3. Cut LED strips to size (same as original version)
 4. Wire all segments
-5. Install ESP board
+5. Install ESP board in the dedicated housing space
+6. Route power cable through the side cutout
+7. Attach lid using four M3 screws
+8. Can be wall-mounted using the integrated keyhole slots
 
 ## Contributing
 
