@@ -143,12 +143,16 @@ then to open the dashboard:
 
 `#ESPHome
 wifi_ssid: "networkName"
+
 wifi_password: "password"
+
 ota_password: "password"
+
 api_encryption_key: "long_jumble_of_random_characters_you_create_once"`
 
 ota_password is just a new key that you create that will be needed to be able to update the clock device wirelessly over the air afterwards.
 api_encryption_key Is a unique BASE64 key which can be generated here:
+https://esphome.io/components/api.html#configuration-variables
 
 ## Configuration Settings in led-digits.yaml
 Also in addition to secrets, edit these values in your main YAML file before installing:
