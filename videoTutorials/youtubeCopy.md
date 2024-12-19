@@ -109,14 +109,20 @@ How to 3D Print a Smart Digital Clock - Part 1: Design & Slicing | ESP32 Home As
 - Multiple design options (4-digit, 6-digit, modular)
 
 🛠️ Required Tools & Materials (Part 1):
-3D Printer: [Amazon Affiliate Link]
-PLA/PETG Filament: [Amazon Affiliate Link]
-Clear/Translucent Filament: [Amazon Affiliate Link]
+3D Printer: [[Amazon Link](https://amzn.to/400ohLu)]
+PLA+ Filament: [[Amazon Link](https://amzn.to/4gyXcVk)]
+Textured Buildplate: [[Amazon Link](https://amzn.to/49Jpb2q)]
+Ender 3 LED Bar: [[Amazon Link](https://amzn.to/3DxsLjW)]
+Alcohol Pads: [[Amazon Link](https://amzn.to/3ZMH7Vn)]
+Creality Hyperseries Clear/Translucent Filament: [[Amazon Link](https://amzn.to/3BC7ODW)]
+
+🛠️ Required Software
 OpenSCAD Software (Free): https://openscad.org/
+Ultimaker Cura Slider Software (Free): https://ultimaker.com/software/ultimaker-cura/
 
 📥 Get the Files:
-Printables: https://www.printables.com/model/1101964
 Thingiverse: https://www.thingiverse.com/thing:6861353
+Printables: https://www.printables.com/model/1101964
 GitHub: https://github.com/kylemath/digitalclock
 
 🎬 Watch the Complete Series:
@@ -181,6 +187,7 @@ Build a Smart LED Clock - Part 2: Electronics Assembly | ESP32 Home Assistant Cl
 9:00 - Final Assembly & Testing
 
 🔧 What We'll Cover:
+
 - Safe soldering techniques
 - LED strip wiring
 - Power supply considerations
@@ -188,13 +195,15 @@ Build a Smart LED Clock - Part 2: Electronics Assembly | ESP32 Home Assistant Cl
 - Case assembly tips
 
 🛠️ Required Tools:
+
 - Soldering Iron: [Amazon Link]
 - Wire Strippers: [Amazon Link]
 - Small Screwdriver Set: [Amazon Link]
 - Hot Glue Gun: [Amazon Link]
 
 📦 Required Parts:
-- ESP8266/ESP32 D1 Mini: [Amazon Link]
+
+- ESP8266/ESP32 D1 Mini: [[Amazon Link](https://amzn.to/4iHuXWk)]
 - WS2812B LED Strip: [Amazon Link]
 - 5V Power Supply (2A): [Amazon Link]
 - Micro USB Cable: [Amazon Link]
@@ -218,13 +227,14 @@ Watch the 2.5-minute short: [Link]
 Wire Up a Smart LED Clock in 2.5 Minutes! ⚡ #shorts
 
 **Description:**
-Quick guide to assembling the electronics for our ESP32-powered digital clock! 
+Quick guide to assembling the electronics for our ESP32-powered digital clock!
 
 🔧 Parts needed:
+
 - ESP32/ESP8266
 - WS2812B LED Strip
 - 5V Power Supply
-Full parts list in description of main video!
+  Full parts list in description of main video!
 
 👉 Watch the full tutorial: [Link to full version]
 📱 All files and instructions: https://github.com/kylemath/digitalclock
@@ -252,6 +262,7 @@ Program Your Smart Clock - Part 3: ESPHome Setup | ESP32 Home Assistant Clock
 9:00 - Troubleshooting & Tips
 
 🔧 What We'll Cover:
+
 - ESPHome installation
 - Basic YAML configuration
 - WiFi setup
@@ -260,16 +271,19 @@ Program Your Smart Clock - Part 3: ESPHome Setup | ESP32 Home Assistant Clock
 - Troubleshooting common issues
 
 🛠️ Required Software:
+
 - Home Assistant: https://www.home-assistant.io/
 - ESPHome Add-on
 - VS Code (optional): [Download Link]
 
 📦 Required Items:
+
 - Computer with USB Port
 - Micro USB Cable: [Amazon Link]
 - Previously built clock from Parts 1 & 2
 
 🌟 Features We'll Enable:
+
 - Time synchronization
 - Custom animations
 - Brightness control
@@ -295,6 +309,7 @@ Program a Smart Clock in 2.5 Minutes! 💻 #shorts
 Quick guide to setting up ESPHome and programming your digital clock!
 
 ⚡ Features:
+
 - Time sync
 - Custom animations
 - Home Assistant integration
