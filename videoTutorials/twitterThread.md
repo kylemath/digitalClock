@@ -14,18 +14,15 @@ The design comes in three flavors:
 • 6-digit monolithic (HH:MM:SS)
 • 4-digit compact (HH:MM)
 
-All files are free and open source 🎉
+Watch the full guide: https://youtu.be/DS_muPDX8p8
 [Photo showing different versions]
 
 ## Tweet 3
 
-Part 1 of the tutorial is live! Covers:
-• 3D printing setup
-• Customizing the design
-• Slicer settings
-• Assembly tips
+Don't have time for the full tutorial?
+Check out our 2.5min quick guide: https://youtu.be/-_kpwUeTEb4
 
-Watch here: [YouTube Link]
+Subscribe for Parts 2 & 3 coming soon!
 #3DPrinting #SmartHome
 
 ## Tweet 4
@@ -35,7 +32,7 @@ Get the files:
 • Thingiverse: https://www.thingiverse.com/thing:6861353
 • GitHub: https://github.com/kylemath/digitalclock
 
-Parts 2 & 3 coming soon! 🚀
+Full Playlist: https://youtube.com/playlist?list=PLeBpq2qBuOI1kfnOv1Nu6G2_ES9P5Xj6k
 #ESP32 #HomeAssistant
 
 ## Tweet 5

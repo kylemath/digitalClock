@@ -126,45 +126,56 @@ Printables: https://www.printables.com/model/1101964
 GitHub: https://github.com/kylemath/digitalclock
 
 🎬 Watch the Complete Series:
+Playlist (https://youtube.com/playlist?list=PLeBpq2qBuOI1kfnOv1Nu6G2_ES9P5Xj6k&si=4pqwdTxPQehg_aGT)
 Part 1: 3D Printing (You're here!)
 Part 2: Electronics Assembly (Coming Soon)
 Part 3: Firmware & Configuration (Coming Soon)
 
 👉 Quick Version:
-Watch the 2.5-minute short: [Link to short]
+Watch the 2.5-minute short: [Link to short](https://youtu.be/-_kpwUeTEb4)
 
 ❤️ Like and Subscribe for more DIY smart home projects!
 
 **Tags:**
 
-- 3d printing
-- esp32 clock
-- digital clock
-- home assistant
-- esphome
-- smart home diy
-- openscad tutorial
-- led clock
-- 3d printed clock
-- esp8266
-- ws2812b
-- maker project
-- smart home automation
-- 3d printing tutorial
-- home assistant tutorial
+3d printing, esp32 clock, digital clock, home assistant, esphome, smart home diy, openscad tutorial, led clock, 3d printed clock, esp8266, ws2812b, maker project, smart home automation, 3d printing tutorial, home assistant tutorial
 
 ### Short Version (2.5min)
 
 **Title:**
-3D Printing a Smart LED Clock in 2.5 Minutes! 🕒 #shorts
+How to 3D Print a Smart Digital Clock in 2.5 Minutes! | ESP32 Home Assistant Clock #shorts
 
 **Description:**
 Quick guide to 3D printing our ESP32-powered digital clock!
 
-👉 Watch the full tutorial: [Link to full version]
-📱 All files and instructions: https://github.com/kylemath/digitalclock
+🖨️ What You'll Need:
+• 3D Printer: https://amzn.to/400ohLu
+• PLA+ Filament: https://amzn.to/4gyXcVk
+• Clear Filament: https://amzn.to/3BC7ODW
+• Build Surface: https://amzn.to/49Jpb2q
+• Printer Light: https://amzn.to/3DxsLjW
+• Alcohol Pads: https://amzn.to/3ZMH7Vn
 
-#3dprinting #smarthome #homeassistant #esp32 #maker #diy #3dprinted
+💻 Free Software:
+• OpenSCAD: https://openscad.org
+• Cura Slicer: https://ultimaker.com/software/ultimaker-cura/
+
+📥 Get the Files:
+• Printables: https://www.printables.com/model/1101964
+• Thingiverse: https://www.thingiverse.com/thing:6861353
+• GitHub: https://github.com/kylemath/digitalclock
+
+👉 Watch the longer verision of this tutorial: [Link to full version](https://youtu.be/DS_muPDX8p8)
+🎬 Parts 2 & 3 coming soon:
+
+- Part 2: Electronics Assembly
+- Part 3: ESPHome Setup
+
+❤️ Like & Subscribe for the complete series!
+
+#3dprinting #smarthome #homeassistant #esp32 #maker #diy #3dprinted #tutorial #clock
+
+\*As an Amazon Associate I earn from qualifying purchases
 
 ---
 
