@@ -4,6 +4,85 @@
 
 A three-part tutorial series showing how to build a modern LED digital clock using ESP32/ESP8266, connecting to Home Assistant through ESPHome.
 
+## Video Overlay Information
+
+### Main Title (All Parts):
+
+3D printed LED Strip Clock
+
+### Author Credit (All Parts):
+
+Prof Kyle Mathewson - University of Alberta
+
+### Part-Specific Titles:
+
+Part 1:
+
+- Main: "Part 1: 3D Print Tutorial"
+- Subtitle: "Customization, Slicing, Printing"
+
+Part 2:
+
+- Main: "Part 2: Electronics Assembly"
+- Subtitle: "Wiring, Soldering, Construction"
+
+Part 3:
+
+- Main: "Part 3: Firmware Setup"
+- Subtitle: "ESPHome & Home Assistant Configuration"
+
+## Required YouTube Upload Elements
+
+### Thumbnail Requirements
+
+- Size: 1280 x 720 pixels
+- Format: JPG, GIF, BMP, or PNG
+- Max file size: 2MB
+- Should be eye-catching and include:
+  - Project image
+  - Title text
+  - Part number
+  - Brand colors/style
+
+### End Screen (Last 20 seconds)
+
+- Subscribe button
+- Link to next video in series
+- Link to playlist
+- Link to channel
+
+### Cards
+
+- Add card linking to full tutorial at short video endpoint
+- Add cards linking to parts list/GitHub
+- Add cards linking to next/previous parts
+
+### Playlists to Add
+
+- ESP Projects
+- Smart Home DIY
+- 3D Printing Projects
+- Full Tutorials
+- Shorts Collection
+
+### Video Settings
+
+- Category: Science & Technology
+- Language: English
+- Caption certification: None
+- License: Standard YouTube License
+- Age restriction: No
+- Comments: Enabled
+- Visibility: Public
+
+### Community Engagement
+
+- Pin first comment with links to:
+  - Parts list
+  - GitHub repository
+  - Support/community channels
+  - Timestamps (if not in description)
+
 ## Part 1: 3D Printing & Design
 
 ### Full Version (10min)
@@ -15,8 +94,12 @@ How to 3D Print a Smart Digital Clock - Part 1: Design & Slicing | ESP32 Home As
 🕒 Build your own modern LED digital clock that connects to Home Assistant! In this first part of our three-part series, we'll cover the 3D printing process and design modifications.
 
 ⏱️ Timeline:
-0:00 - Introduction
-[Add other key timestamps]
+0:00 - Introduction & Overview
+2:30 - Required Materials
+4:00 - OpenSCAD File Modifications
+5:30 - Slicer Settings
+7:00 - Printing Tips & Tricks
+9:00 - Next Steps & Preview
 
 🔧 What We'll Cover:
 
@@ -87,17 +170,30 @@ Quick guide to 3D printing our ESP32-powered digital clock!
 Build a Smart LED Clock - Part 2: Electronics Assembly | ESP32 Home Assistant Clock
 
 **Description:**
-[Add intro]
+🔌 Ready to bring your 3D printed clock to life? In this second part of our series, we'll walk through the complete electronics assembly process, from LED strip preparation to final testing.
+
+⏱️ Timeline:
+0:00 - Introduction & Overview
+2:30 - Required Materials
+4:00 - LED Strip Preparation
+5:30 - ESP32 Wiring
+7:00 - Power Supply Setup
+9:00 - Final Assembly & Testing
+
+🔧 What We'll Cover:
+- Safe soldering techniques
+- LED strip wiring
+- Power supply considerations
+- ESP32/ESP8266 setup
+- Case assembly tips
 
 🛠️ Required Tools:
-
 - Soldering Iron: [Amazon Link]
 - Wire Strippers: [Amazon Link]
 - Small Screwdriver Set: [Amazon Link]
 - Hot Glue Gun: [Amazon Link]
 
 📦 Required Parts:
-
 - ESP8266/ESP32 D1 Mini: [Amazon Link]
 - WS2812B LED Strip: [Amazon Link]
 - 5V Power Supply (2A): [Amazon Link]
@@ -106,11 +202,34 @@ Build a Smart LED Clock - Part 2: Electronics Assembly | ESP32 Home Assistant Cl
 - 220 Ohm Resistor: [Amazon Link]
 - Optional Power Jack: [Amazon Link]
 
-[Rest of description to be added]
+📺 Watch the Complete Series:
+Part 1: 3D Printing - [Link]
+Part 2: Electronics Assembly (You're here!)
+Part 3: Firmware Setup (Coming Soon)
 
-### Short Version
+👉 Quick Version:
+Watch the 2.5-minute short: [Link]
 
-[To be added]
+❤️ Like and Subscribe for more DIY smart home projects!
+
+### Short Version (2.5min)
+
+**Title:**
+Wire Up a Smart LED Clock in 2.5 Minutes! ⚡ #shorts
+
+**Description:**
+Quick guide to assembling the electronics for our ESP32-powered digital clock! 
+
+🔧 Parts needed:
+- ESP32/ESP8266
+- WS2812B LED Strip
+- 5V Power Supply
+Full parts list in description of main video!
+
+👉 Watch the full tutorial: [Link to full version]
+📱 All files and instructions: https://github.com/kylemath/digitalclock
+
+#electronics #smarthome #homeassistant #esp32 #maker #diy #ledstrip
 
 ---
 
@@ -122,25 +241,68 @@ Build a Smart LED Clock - Part 2: Electronics Assembly | ESP32 Home Assistant Cl
 Program Your Smart Clock - Part 3: ESPHome Setup | ESP32 Home Assistant Clock
 
 **Description:**
-[Add intro]
+⚡ Time to bring your clock online! In this final part of our series, we'll configure ESPHome and integrate your clock with Home Assistant for smart home control.
+
+⏱️ Timeline:
+0:00 - Introduction & Overview
+2:30 - Software Installation
+4:00 - ESPHome Configuration
+5:30 - Home Assistant Integration
+7:00 - Custom Features & Animations
+9:00 - Troubleshooting & Tips
+
+🔧 What We'll Cover:
+- ESPHome installation
+- Basic YAML configuration
+- WiFi setup
+- Custom animations
+- Home Assistant integration
+- Troubleshooting common issues
 
 🛠️ Required Software:
-
 - Home Assistant: https://www.home-assistant.io/
 - ESPHome Add-on
 - VS Code (optional): [Download Link]
 
 📦 Required Items:
-
 - Computer with USB Port
 - Micro USB Cable: [Amazon Link]
 - Previously built clock from Parts 1 & 2
 
-[Rest of description to be added]
+🌟 Features We'll Enable:
+- Time synchronization
+- Custom animations
+- Brightness control
+- Color changing
+- Home Assistant automation
 
-### Short Version
+📺 Watch the Complete Series:
+Part 1: 3D Printing - [Link]
+Part 2: Electronics Assembly - [Link]
+Part 3: Firmware Setup (You're here!)
 
-[To be added]
+👉 Quick Version:
+Watch the 2.5-minute short: [Link]
+
+❤️ Like and Subscribe for more DIY smart home projects!
+
+### Short Version (2.5min)
+
+**Title:**
+Program a Smart Clock in 2.5 Minutes! 💻 #shorts
+
+**Description:**
+Quick guide to setting up ESPHome and programming your digital clock!
+
+⚡ Features:
+- Time sync
+- Custom animations
+- Home Assistant integration
+
+👉 Watch the full tutorial: [Link to full version]
+📱 Complete guide & code: https://github.com/kylemath/digitalclock
+
+#esphome #homeassistant #smarthome #esp32 #programming #automation #diy
 
 ---
 
@@ -152,3 +314,52 @@ Program Your Smart Clock - Part 3: ESPHome Setup | ESP32 Home Assistant Clock
 - Add cards and end screens in YouTube editor
 - Include links to social media profiles
 - Update short video links once published
+- Test all links before publishing
+- Ensure consistent branding across all parts
+- Update playlists as new videos are published
+- Monitor comments for the first 24 hours after publishing
+
+## YouTube Studio Setup Instructions
+
+### How to Add End Screens (Last 20 seconds)
+
+1. Go to YouTube Studio
+2. Click on "Content" in the left menu
+3. Find your video and click "Details"
+4. Click "End screen & Cards" in the top menu
+5. Click "Add element" (max 4 elements)
+6. Choose from:
+   - Video/playlist
+   - Subscribe button
+   - Channel
+   - Link (if eligible)
+
+Pro tips for End Screens:
+
+- Leave 20 seconds of space at video end
+- Create a background that has designated spaces for elements
+- You can use templates or copy from previous videos
+- Consider using a fade-to-blur or static background
+- Test end screen placement before publishing
+
+### How to Add Cards
+
+1. In YouTube Studio, go to video's "Details"
+2. Click "End screen & Cards"
+3. Click "Add card"
+4. Choose type:
+   - Video/playlist
+   - Channel
+   - Link (if eligible)
+   - Poll
+5. Select timing for card appearance
+6. Position card notification
+
+Best practices for Cards:
+
+- Add cards when mentioning related content
+- Link to full tutorial from shorts
+- Space cards throughout video
+- Use cards to guide viewers through series
+- Don't cluster too many cards together
+- Test all links before publishing
