@@ -2,10 +2,10 @@
 
 A collection of 3D-printed digital clock designs powered by ESPHome and Home Assistant. This project includes both modular and monolithic clock designs that you can build according to your needs.
 
-📦 **GitHub Repository**: [kylemath/digitalclock](https://github.com/kylemath/digitalclock)
-🖨️ **Printables**: [ESP32 Seven Segment Digital Clock](https://www.printables.com/model/1101964)
-🎨 **Thingiverse**: [ESP Digital Clock Collection](https://www.thingiverse.com/thing:6861353)
-📺 **Video Tutorial Series**: [Complete Playlist](https://youtube.com/playlist?list=PLeBpq2qBuOI1kfnOv1Nu6G2_ES9P5Xj6k&si=4pqwdTxPQehg_aGT)
+- 📦 **GitHub Repository**: [kylemath/digitalclock](https://github.com/kylemath/digitalclock)
+- 🖨️ **Printables**: [ESP32 Seven Segment Digital Clock](https://www.printables.com/model/1101964)
+- 🎨 **Thingiverse**: [ESP Digital Clock Collection](https://www.thingiverse.com/thing:6861353)
+- 📺 **Video Tutorial Series**: [Complete Playlist](https://youtube.com/playlist?list=PLeBpq2qBuOI1kfnOv1Nu6G2_ES9P5Xj6k&si=4pqwdTxPQehg_aGT)
 
 ## Video Tutorials
 
