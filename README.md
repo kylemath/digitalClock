@@ -5,7 +5,7 @@ A collection of 3D-printed digital clock designs powered by ESPHome and Home Ass
 📦 **GitHub Repository**: [kylemath/digitalclock](https://github.com/kylemath/digitalclock)
 🖨️ **Printables**: [ESP32 Seven Segment Digital Clock](https://www.printables.com/model/1101964)
 🎨 **Thingiverse**: [ESP Digital Clock Collection](https://www.thingiverse.com/thing:6861353)
-📺 **Video Tutorial Series**: [Complete Playlist](https://youtube.com/playlist?list=PLeBpq2qBuOI1kfnOv1Nu6G2_ES9P5Xj6k&si=4pqwdTxPQehg_aGT)
+📺 **Video Tutorial Series**: [Four-Part Complete Build Guide](https://youtube.com/playlist?list=PLeBpq2qBuOI1kfnOv1Nu6G2_ES9P5Xj6k&si=4pqwdTxPQehg_aGT)
 
 ## Video Tutorials
 
@@ -14,10 +14,15 @@ A collection of 3D-printed digital clock designs powered by ESPHome and Home Ass
 - 📺 [Full Tutorial (10min)](https://youtu.be/DS_muPDX8p8)
 - 🎬 [Quick Guide (2.5min)](https://youtu.be/-_kpwUeTEb4)
 
+### Part 2: Parts, Tools, and Wiring
+
+- 📺 [Full Tutorial (15min)](https://youtu.be/uiOuWeXdryE)
+- 🎬 [Quick Guide (Coming Soon)]
+
 ### Coming Soon
 
-- Part 2: Electronics Assembly
-- Part 3: Firmware Setup
+- Part 3: Final Assembly
+- Part 4: Firmware & Configuration
 
 ## Overview
 
