@@ -2,7 +2,7 @@
 
 ## Series Overview
 
-A three-part tutorial series showing how to build a modern LED digital clock using ESP32/ESP8266, connecting to Home Assistant through ESPHome.
+A four-part tutorial series showing how to build a modern LED digital clock using ESP32/ESP8266, connecting to Home Assistant through ESPHome.
 
 ## Video Overlay Information
 
@@ -143,9 +143,9 @@ GitHub: https://github.com/kylemath/digitalclock
 🎬 Watch the Complete Series:
 Playlist (https://youtube.com/playlist?list=PLeBpq2qBuOI1kfnOv1Nu6G2_ES9P5Xj6k&si=4pqwdTxPQehg_aGT)
 Part 1: 3D Printing (You're here!)
-Part 2: Parts, Tools, and Wiring (Coming Soon)
-Part 3: Final Assembly (Coming Soon)
-Part 4: Firmware & Configuration (Coming Soon)
+Part 2: Parts, Tools, and Wiring - [https://youtu.be/uiOuWeXdryE]
+Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90]
+Part 4: Firmware Setup (Coming Soon)
 
 👉 Quick Version:
 Watch the 2.5-minute short: [Link to short](https://youtu.be/-_kpwUeTEb4)
@@ -253,7 +253,7 @@ Build a Smart LED Clock - Part 2: Parts, Tools, and Wiring | ESP32 Home Assistan
 📺 Watch the Complete Series:
 Part 1: 3D Printing - [https://youtu.be/DS_muPDX8p8]
 Part 2: Parts, Tools, and Wiring - [https://youtu.be/uiOuWeXdryE]
-Part 3: Final Assembly (Coming Soon)
+Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90]
 Part 4: Firmware Setup (Coming Soon)
 
 👉 Quick Version:
@@ -282,7 +282,7 @@ Quick guide to understanding the electronics and wiring for our ESP32-powered di
 🎬 Four-Part Series:
 Part 1: 3D Printing - [https://youtu.be/DS_muPDX8p8] ✅
 Part 2: Parts, Tools, and Wiring (You're here!)
-Part 3: Final Assembly (Coming Soon)
+Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90]
 Part 4: ESPHome Setup (Coming Soon)
 
 #electronics #smarthome #homeassistant #esp32 #maker #diy #ledstrip
@@ -294,25 +294,31 @@ Part 4: ESPHome Setup (Coming Soon)
 ### Full Version
 
 **Title:**
-Build a Smart LED Clock - Part 3: Final Assembly | ESP32 Home Assistant Clock
+Build a Smart LED Clock - Part 3: Assembly & Soldering | ESP32 Home Assistant Clock + 6-Digit Bonus Build
 
 **Description:**
 🔨 Time to put it all together! In part three of our four-part series, we'll assemble your smart LED clock, combining the 3D printed parts with the electronics.
 
+Plus: Watch the complete build of the 6-digit version!
+
 ⏱️ Timeline:
 0:00 - Introduction & Overview
-2:30 - Pre-assembly Checklist
-4:00 - LED Strip Installation
-6:00 - Case Assembly
-8:00 - ESP32 Mounting
-10:00 - Final Testing
-12:00 - Troubleshooting Tips
+1:00 - 4-Digit Clock Assembly
+3:00 - LED Strip Installation
+5:00 - Soldering Techniques
+7:00 - Wire Management
+9:00 - Case Assembly & Testing
+11:00 - 6-Digit Clock Build
+13:00 - Final Testing & Tips
+14:00 - Preview of Part 4
 
 🔧 What We'll Cover:
 
+- Complete soldering guide
 - LED strip placement techniques
 - Case assembly steps
 - Wire management
+- 6-digit clock assembly
 - Testing procedures
 - Common assembly issues
 
@@ -323,15 +329,23 @@ Build a Smart LED Clock - Part 3: Final Assembly | ESP32 Home Assistant Clock
 - Hot glue gun
 - Small screwdrivers
 - Wire ties/management tools
+- Soldering iron & solder
+- Heat shrink tubing
+- Wire strippers
 
 📺 Watch the Complete Series:
-Part 1: 3D Printing - [Link]
-Part 2: Parts, Tools, and Wiring - [Link]
-Part 3: Final Assembly (You're here!)
+Part 1: 3D Printing - [https://youtu.be/DS_muPDX8p8]
+Part 2: Parts, Tools, and Wiring - [https://youtu.be/uiOuWeXdryE]
+Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90]
 Part 4: Firmware Setup (Coming Soon)
 
 👉 Quick Version:
-Watch the 2.5-minute short: [Link]
+Watch the 2.5-minute short: [Coming Soon]
+
+📦 Get Everything You Need:
+• GitHub: https://github.com/kylemath/digitalclock
+• Printables: https://www.printables.com/model/1101964
+• Thingiverse: https://www.thingiverse.com/thing:6861353
 
 ❤️ Like and Subscribe for more DIY smart home projects!
 
@@ -356,7 +370,7 @@ Quick guide to assembling your ESP32-powered digital clock!
 🎬 Four-Part Series:
 Part 1: 3D Printing ✅
 Part 2: Parts, Tools, and Wiring ✅
-Part 3: Final Assembly (You're here!)
+Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90]
 Part 4: ESPHome Setup (Coming Soon)
 
 #diy #electronics #smarthome #homeassistant #esp32 #maker #3dprinting
@@ -417,7 +431,7 @@ Build a Smart LED Clock - Part 4: ESPHome Setup | ESP32 Home Assistant Clock
 📺 Watch the Complete Series:
 Part 1: 3D Printing - [Link]
 Part 2: Parts, Tools, and Wiring - [Link]
-Part 3: Final Assembly - [Link]
+Part 3: Assembly & Soldering - [Link]
 Part 4: Firmware Setup (You're here!)
 
 👉 Quick Version:
@@ -446,7 +460,7 @@ Quick guide to setting up ESPHome and programming your digital clock!
 🎬 Complete Four-Part Series:
 Part 1: 3D Printing - [https://youtu.be/DS_muPDX8p8] ✅
 Part 2: Parts, Tools, and Wiring ✅
-Part 3: Final Assembly ✅
+Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90]
 Part 4: ESPHome Setup (You're here!)
 
 #esphome #homeassistant #smarthome #esp32 #programming #automation #diy

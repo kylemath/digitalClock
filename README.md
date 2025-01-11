@@ -19,10 +19,15 @@ A collection of 3D-printed digital clock designs powered by ESPHome and Home Ass
 - 📺 [Full Tutorial (15min)](https://youtu.be/uiOuWeXdryE)
 - 🎬 [Quick Guide (Coming Soon)]
 
-### Coming Soon
+### Part 3: Final Assembly
 
-- Part 3: Final Assembly
-- Part 4: Firmware & Configuration
+- 📺 [Full Tutorial (15min)](https://youtu.be/76l32a6Kb90)
+- 🎬 [Quick Guide (Coming Soon)]
+
+### Part 4: Firmware & Configuration
+
+- 📺 [Full Tutorial (15min)](Your_New_Video_Link)
+- 🎬 [Quick Guide (Coming Soon)]
 
 ## Overview
 
@@ -323,3 +328,7 @@ If you need help, please:
 1. Check existing issues
 2. Create a new issue
 3. Join our discussion forum [link]
+
+### Series Complete!
+
+All four parts of the tutorial series are now available. Follow along to build your own LED clock from start to finish!

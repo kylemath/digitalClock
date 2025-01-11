@@ -8,6 +8,10 @@ _Dec 12, 2024 Update - Added Four Digit Lid design as a .scad and .stl which mak
 
 _Dec 19, 2024 Update - Created Part 1 & 2 of a 4-part tutorial series, posted the video links below._
 
+_Dec 24, 2024 Update - Part 3 now available! Includes complete assembly guide and bonus 6-digit clock build._
+
+_Dec 26, 2024 Update - Series complete! All four parts now available._
+
 ## Video Tutorials
 
 ### Part 1: 3D Printing & Design
@@ -24,12 +28,23 @@ Learn about the electronics and wiring setup:
 - [Full Tutorial (15min)](https://youtu.be/uiOuWeXdryE)
 - Quick Guide (Coming Soon)
 
-### More Tutorials Coming Soon
+### Part 3: Assembly & Soldering
 
-- Part 3: Final Assembly
-- Part 4: Firmware Setup
+Complete assembly guide plus bonus 6-digit clock build:
 
-Want to follow along? Subscribe to the [Complete Tutorial Series](https://youtube.com/playlist?list=PLeBpq2qBuOI1kfnOv1Nu6G2_ES9P5Xj6k&si=4pqwdTxPQehg_aGT)
+- [Full Tutorial (15min)](https://youtu.be/76l32a6Kb90)
+- Quick Guide (Coming Soon)
+
+### Part 4: Firmware & ESPHome Setup
+
+Complete firmware setup and Home Assistant integration:
+
+- [Full Tutorial (15min)](Your_New_Video_Link)
+- Quick Guide (Coming Soon)
+
+### Complete Series Available!
+
+Watch the entire build process from start to finish in our [Complete Tutorial Series](https://youtube.com/playlist?list=PLeBpq2qBuOI1kfnOv1Nu6G2_ES9P5Xj6k)
 
 # ESP Digital Clock Collection
 
