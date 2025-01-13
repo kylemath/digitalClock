@@ -27,8 +27,8 @@
 📺 Full Series:
 Part 1: You are here!
 Part 2: Parts & Wiring - https://youtu.be/uiOuWeXdryE
-Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90]
-Part 4: Firmware (Coming Soon)
+Part 3: Assembly & Soldering - https://youtu.be/76l32a6Kb90
+Part 4: Firmware - https://youtu.be/q1JSGy7HCL0
 
 ## Part 2: Parts, Tools, and Wiring
 
@@ -36,7 +36,6 @@ Part 4: Firmware (Coming Soon)
 
 🔧 Parts & Resources:
 • Complete Build Guide: https://github.com/kylemath/digitalclock
-• Part 1 (3D Printing): https://youtu.be/DS_muPDX8p8
 
 ⏱️ Timestamps:
 0:00 - Print Quality Check
@@ -62,10 +61,14 @@ Part 4: Firmware (Coming Soon)
 • M3 Screws (1cm)
 
 📺 Full Series:
-Part 1: 3D Printing ✅
-Part 2: You are here!
-Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90]
-Part 4: Firmware (Coming Soon)
+🔧 Parts & Resources:
+• Complete Build Guide: https://github.com/kylemath/digitalclock
+• Part 1 (3D Printing): https://youtu.be/DS_muPDX8p8
+• Part 2 (Electronics): https://youtu.be/uiOuWeXdryE
+• Part 3: Assembly & Soldering - https://youtu.be/76l32a6Kb90
+• Part 4: Firmware - https://youtu.be/q1JSGy7HCL0
+
+👉 Quick Teaser: Watch the 17-second preview: https://youtu.be/x0ZPEmYtgFM
 
 ## Part 3: Final Assembly
 
@@ -75,17 +78,8 @@ Part 4: Firmware (Coming Soon)
 • Complete Build Guide: https://github.com/kylemath/digitalclock
 • Part 1 (3D Printing): https://youtu.be/DS_muPDX8p8
 • Part 2 (Electronics): https://youtu.be/uiOuWeXdryE
-
-⏱️ Timestamps:
-0:00 - Introduction & Overview
-1:00 - 4-Digit Clock Assembly
-3:00 - LED Strip Installation
-5:00 - Soldering Techniques
-7:00 - Wire Management
-9:00 - Case Assembly & Testing
-11:00 - 6-Digit Clock Build
-13:00 - Final Testing & Tips
-14:00 - Preview of Part 4
+• Part 3: Assembly & Soldering - https://youtu.be/76l32a6Kb90
+• Part 4: Firmware - https://youtu.be/q1JSGy7HCL0
 
 🛠️ Required Tools:
 • Soldering iron & solder
@@ -95,36 +89,23 @@ Part 4: Firmware (Coming Soon)
 • Heat shrink tubing
 • Wire management tools
 
-📺 Full Series:
-Part 1: 3D Printing ✅
-Part 2: Electronics & Wiring ✅
-Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90]
-Part 4: Firmware (Coming Soon)
-
 💡 Bonus: Watch the complete 6-digit clock build starting at 11:00!
+👉 Quick Teaser: Watch the 17-second preview: https://youtu.be/x0ZPEmYtgFM
 
 ## Part 4: Firmware & Configuration
 
 📌 Complete your LED clock with firmware setup:
 
-🔧 Parts & Resources:
+📺 Complete Four-Part Series:
 • Complete Build Guide: https://github.com/kylemath/digitalclock
 • Part 1 (3D Printing): https://youtu.be/DS_muPDX8p8
 • Part 2 (Electronics): https://youtu.be/uiOuWeXdryE
 • Part 3 (Assembly): https://youtu.be/76l32a6Kb90
-
-⏱️ Timestamps:
-0:00 - Introduction & Overview
-2:30 - Software Requirements
-4:00 - ESPHome Installation
-6:00 - YAML Configuration
-8:00 - WiFi Setup
-10:00 - Home Assistant Integration
-12:00 - Custom Animations
-14:00 - Troubleshooting Guide
+• Part 4: You are here!
 
 📺 Complete Four-Part Series:
 Part 1: 3D Printing ✅
 Part 2: Electronics & Wiring ✅
 Part 3: Assembly ✅
-Part 4: You are here!
+
+👉 Quick Teaser: Watch the 17-second preview: https://youtu.be/x0ZPEmYtgFM

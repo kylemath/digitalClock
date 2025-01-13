@@ -19,28 +19,28 @@ _Dec 26, 2024 Update - Series complete! All four parts now available._
 Watch either version to learn how to customize, slice, and print your clock:
 
 - [Full Tutorial (10min)](https://youtu.be/DS_muPDX8p8)
-- [Quick Guide (2.5min)](https://youtu.be/-_kpwUeTEb4)
+- [Quick Teaser (17sec)](https://youtu.be/x0ZPEmYtgFM)
 
 ### Part 2: Parts, Tools, and Wiring
 
 Learn about the electronics and wiring setup:
 
 - [Full Tutorial (15min)](https://youtu.be/uiOuWeXdryE)
-- Quick Guide (Coming Soon)
+- [Quick Teaser (17sec)](https://youtu.be/x0ZPEmYtgFM)
 
 ### Part 3: Assembly & Soldering
 
 Complete assembly guide plus bonus 6-digit clock build:
 
 - [Full Tutorial (15min)](https://youtu.be/76l32a6Kb90)
-- Quick Guide (Coming Soon)
+- [Quick Teaser (17sec)](https://youtu.be/x0ZPEmYtgFM)
 
 ### Part 4: Firmware & ESPHome Setup
 
 Complete firmware setup and Home Assistant integration:
 
-- [Full Tutorial (15min)](Your_New_Video_Link)
-- Quick Guide (Coming Soon)
+- [Full Tutorial (15min)](https://youtu.be/q1JSGy7HCL0)
+- [Quick Teaser (17sec)](https://youtu.be/x0ZPEmYtgFM)
 
 ### Complete Series Available!
 
