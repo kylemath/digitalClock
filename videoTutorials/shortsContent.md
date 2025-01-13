@@ -13,6 +13,8 @@ Quick preview of the electronics setup for our ESP32 LED Clock!
 👉 Watch full tutorials:
 Part 1: https://youtu.be/DS_muPDX8p8
 Part 2: https://youtu.be/uiOuWeXdryE
+Part 3: https://youtu.be/76l32a6Kb90
+Part 4: https://youtu.be/q1JSGy7HCL0
 
 🛠️ Build your own:
 https://github.com/kylemath/digitalclock
@@ -54,7 +56,7 @@ Quick guide to setting up ESPHome and Home Assistant for our LED clock!
 Part 1: https://youtu.be/DS_muPDX8p8
 Part 2: https://youtu.be/uiOuWeXdryE
 Part 3: https://youtu.be/76l32a6Kb90
-Part 4: [Your_New_Video_Link]
+Part 4: https://youtu.be/q1JSGy7HCL0
 
 🛠️ Build your own:
 https://github.com/kylemath/digitalclock

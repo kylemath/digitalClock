@@ -90,13 +90,13 @@ Part 4:
 
 ## Part 1: 3D Printing & Design
 
-### Full Version (10min)
+### Full Version
 
 **Title:**
-How to 3D Print a Smart Digital Clock - Part 1: Design & Slicing | ESP32 Home Assistant Clock
+Build a Smart LED Clock - Part 1: 3D Printing & Design | ESP32 Home Assistant Clock
 
 **Description:**
-🕒 Build your own modern LED digital clock that connects to Home Assistant! In this first part of our four-part series, we'll cover the 3D printing process and design modifications.
+🖨️ Welcome to Part 1 of our four-part series on building a modern LED digital clock! In this episode, we'll cover everything you need to know about printing and customizing your clock design.
 
 ⏱️ Timeline:
 0:00 - Introduction & Overview
@@ -115,84 +115,63 @@ How to 3D Print a Smart Digital Clock - Part 1: Design & Slicing | ESP32 Home As
 
 🔧 What We'll Cover:
 
-- OpenSCAD layer customization
-- Filament selection & changes
-- Cura slicer optimization
-- Print bed preparation
-- OctoPrint integration
-- Real-time print monitoring
+- OpenSCAD basics
+- STL file generation
+- Print settings optimization
+- Material selection guide
+- Slicer configuration
+- Print monitoring tips
 
-🛠️ Required Tools & Materials:
-3D Printer: [[Amazon Link](https://amzn.to/400ohLu)]
-PLA+ Filament: [[Amazon Link](https://amzn.to/4gyXcVk)]
-Creality White Hyper Series Filament: [[Amazon Link](https://amzn.to/3BC7ODW)]
-Black PLA+ Filament: [Amazon Link]
-Textured Buildplate: [[Amazon Link](https://amzn.to/49Jpb2q)]
-Alcohol Pads: [[Amazon Link](https://amzn.to/3ZMH7Vn)]
-Raspberry Pi (optional for OctoPrint): [Amazon Link]
+🛠️ Required Tools:
 
-🛠️ Required Software
-OpenSCAD Software (Free): https://openscad.org/
-Ultimaker Cura Slider Software (Free): https://ultimaker.com/software/ultimaker-cura/
+- 3D Printer
+- PLA/PETG Filament
+- OpenSCAD Software
+- Slicer Software (Cura)
+- Basic Tools for Clean-up
 
-📥 Get the Files:
-Thingiverse: https://www.thingiverse.com/thing:6861353
-Printables: https://www.printables.com/model/1101964
-GitHub: https://github.com/kylemath/digitalclock
-
-🎬 Watch the Complete Series:
-Playlist (https://youtube.com/playlist?list=PLeBpq2qBuOI1kfnOv1Nu6G2_ES9P5Xj6k&si=4pqwdTxPQehg_aGT)
-Part 1: 3D Printing (You're here!)
+📺 Watch the Complete Series:
+Part 1: 3D Printing - [https://youtu.be/DS_muPDX8p8] (You're here!)
 Part 2: Parts, Tools, and Wiring - [https://youtu.be/uiOuWeXdryE]
 Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90]
-Part 4: Firmware Setup (Coming Soon)
+Part 4: Firmware & ESPHome - [https://youtu.be/q1JSGy7HCL0]
 
-👉 Quick Version:
-Watch the 2.5-minute short: [Link to short](https://youtu.be/-_kpwUeTEb4)
+👉 Quick Teaser: Watch the 17-second preview: [https://youtu.be/x0ZPEmYtgFM]
+
+📦 Get Everything You Need:
+• GitHub: https://github.com/kylemath/digitalclock
+• Printables: https://www.printables.com/model/1101964
+• Thingiverse: https://www.thingiverse.com/thing:6861353
 
 ❤️ Like and Subscribe for more DIY smart home projects!
 
-**Tags:**
-
-3d printing, esp32 clock, digital clock, home assistant, esphome, smart home diy, openscad tutorial, led clock, 3d printed clock, esp8266, ws2812b, maker project, smart home automation, 3d printing tutorial, home assistant tutorial
-
-### Short Version (2.5min)
+### Short Version
 
 **Title:**
-How to 3D Print a Smart Digital Clock in 2.5 Minutes! | ESP32 Home Assistant Clock #shorts
+3D Print Your Own Smart LED Clock! 🖨️ #shorts
 
 **Description:**
-Quick guide to 3D printing our ESP32-powered digital clock!
+Quick guide to 3D printing your ESP32-powered digital clock!
 
-🖨️ What You'll Need:
-• 3D Printer: https://amzn.to/400ohLu
-• PLA+ Filament: https://amzn.to/4gyXcVk
-• White Hyper Series Filament: https://amzn.to/3BC7ODW
-• Black PLA+ Filament: [Amazon Link]
-• Build Surface: https://amzn.to/49Jpb2q
-• Alcohol Pads: https://amzn.to/3ZMH7Vn
-• Raspberry Pi (optional): [Amazon Link]
+🔧 What You'll Learn:
 
-💻 Free Software:
-• OpenSCAD: https://openscad.org
-• Cura Slicer: https://ultimaker.com/software/ultimaker-cura/
-• OctoPrint (optional): https://octoprint.org
+- File preparation
+- Print settings
+- Material selection
+- Quality tips
 
-📥 Get the Files:
-• Printables: https://www.printables.com/model/1101964
-• Thingiverse: https://www.thingiverse.com/thing:6861353
-• GitHub: https://github.com/kylemath/digitalclock
+👉 Watch the full tutorial: [https://youtu.be/DS_muPDX8p8]
+📱 Get all files and instructions: https://github.com/kylemath/digitalclock
 
-👉 Watch the longer verision of this tutorial: [Link to full version](https://youtu.be/DS_muPDX8p8)
-🎬 Coming Soon:
+🎬 Complete Four-Part Series:
+Part 1: 3D Printing (You're here!)
+Part 2: Parts, Tools, and Wiring - [https://youtu.be/uiOuWeXdryE]
+Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90]
+Part 4: Firmware & ESPHome - [https://youtu.be/q1JSGy7HCL0]
 
-- Part 2: Parts, Tools, and Wiring
-- Part 3: Final Assembly
-- Part 4: Firmware Setup
+👉 Quick Teaser: Watch the 17-second preview: [https://youtu.be/x0ZPEmYtgFM]
 
-❤️ Like & Subscribe for the complete series!
-
-#3dprinting #smarthome #homeassistant #esp32 #maker #diy #3dprinted #tutorial #clock #octoprint
+#3dprinting #smarthome #homeassistant #esp32 #maker #diy #electronics
 
 ---
 
@@ -232,32 +211,31 @@ Build a Smart LED Clock - Part 2: Parts, Tools, and Wiring | ESP32 Home Assistan
 
 🛠️ Required Tools:
 
-- Soldering Iron: [Amazon Link]
-- Wire Strippers: [Amazon Link]
-- 3D Printing Snips: [Amazon Link]
-- Small Screwdriver Set: [Amazon Link]
-- Hot Glue Gun: [Amazon Link]
-- Heat Shrink Tubing: [Amazon Link]
+- Soldering Iron: 
+- Wire Strippers:
+- 3D Printing Snips: 
+- Small Screwdriver Set: 
+- Hot Glue Gun: 
+- Heat Shrink Tubing: 
 
 📦 Required Parts:
 
 - ESP8266/ESP32 D1 Mini: [[Amazon Link](https://amzn.to/4iHuXWk)]
-- WS2812B LED Strip (100 LED/m): [Amazon Link]
-- 5V Power Supply (1-2A): [Amazon Link]
-- Micro USB Cable: [Amazon Link]
-- Dupont Wires/Connectors: [Amazon Link]
-- 220 Ohm Resistor: [Amazon Link]
-- M3 Screws (1cm length): [Amazon Link]
-- Breadboard (optional): [Amazon Link]
+- WS2812B LED Strip (100 LED/m): 
+- 5V Power Supply (1-2A): 
+- Micro USB Cable: 
+- Dupont Wires/Connectors: 
+- 220 Ohm Resistor: 
+- M3 Screws (1cm length): 
+- Breadboard (optional): 
 
 📺 Watch the Complete Series:
 Part 1: 3D Printing - [https://youtu.be/DS_muPDX8p8]
-Part 2: Parts, Tools, and Wiring - [https://youtu.be/uiOuWeXdryE]
+Part 2: Parts, Tools, and Wiring - [https://youtu.be/uiOuWeXdryE] (You're here!)
 Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90]
-Part 4: Firmware Setup (Coming Soon)
+Part 4: Firmware & ESPHome - [https://youtu.be/q1JSGy7HCL0]
 
-👉 Quick Version:
-Watch the 2.5-minute short: [Coming Soon]
+👉 Quick Teaser: Watch the 17-second preview: [https://youtu.be/x0ZPEmYtgFM]
 
 ❤️ Like and Subscribe for more DIY smart home projects!
 
@@ -336,11 +314,10 @@ Plus: Watch the complete build of the 6-digit version!
 📺 Watch the Complete Series:
 Part 1: 3D Printing - [https://youtu.be/DS_muPDX8p8]
 Part 2: Parts, Tools, and Wiring - [https://youtu.be/uiOuWeXdryE]
-Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90]
-Part 4: Firmware Setup (Coming Soon)
+Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90] (You're here!)
+Part 4: Firmware & ESPHome - [https://youtu.be/q1JSGy7HCL0]
 
-👉 Quick Version:
-Watch the 2.5-minute short: [Coming Soon]
+👉 Quick Teaser: Watch the 17-second preview: [https://youtu.be/x0ZPEmYtgFM]
 
 📦 Get Everything You Need:
 • GitHub: https://github.com/kylemath/digitalclock
@@ -387,16 +364,6 @@ Build a Smart LED Clock - Part 4: ESPHome Setup | ESP32 Home Assistant Clock
 **Description:**
 ⚡ The final step! In part four of our series, we'll bring your clock online by configuring ESPHome and connecting it to Home Assistant.
 
-⏱️ Timeline:
-0:00 - Introduction & Overview
-2:30 - Software Requirements
-4:00 - ESPHome Installation
-6:00 - YAML Configuration
-8:00 - WiFi Setup
-10:00 - Home Assistant Integration
-12:00 - Custom Animations
-14:00 - Troubleshooting Guide
-
 🔧 What We'll Cover:
 
 - ESPHome basics
@@ -429,13 +396,18 @@ Build a Smart LED Clock - Part 4: ESPHome Setup | ESP32 Home Assistant Clock
 - Home Assistant automations
 
 📺 Watch the Complete Series:
-Part 1: 3D Printing - [Link]
-Part 2: Parts, Tools, and Wiring - [Link]
-Part 3: Assembly & Soldering - [Link]
+Part 1: 3D Printing - [https://youtu.be/DS_muPDX8p8]
+Part 2: Parts, Tools, and Wiring - [https://youtu.be/uiOuWeXdryE]
+Part 3: Assembly & Soldering - [https://youtu.be/76l32a6Kb90]
 Part 4: Firmware Setup (You're here!)
 
 👉 Quick Version:
-Watch the 2.5-minute short: [Link]
+Watch the short: [https://youtu.be/x0ZPEmYtgFM]
+
+📦 Get Everything You Need:
+• GitHub: https://github.com/kylemath/digitalclock
+• Printables: https://www.printables.com/model/1101964
+• Thingiverse: https://www.thingiverse.com/thing:6861353
 
 ❤️ Like and Subscribe for more DIY smart home projects!
 

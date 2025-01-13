@@ -12,22 +12,22 @@ A collection of 3D-printed digital clock designs powered by ESPHome and Home Ass
 ### Part 1: 3D Printing & Design
 
 - 📺 [Full Tutorial (10min)](https://youtu.be/DS_muPDX8p8)
-- 🎬 [Quick Guide (2.5min)](https://youtu.be/-_kpwUeTEb4)
+- 🎬 [Quick Teaser (17sec)](https://youtu.be/x0ZPEmYtgFM)
 
 ### Part 2: Parts, Tools, and Wiring
 
 - 📺 [Full Tutorial (15min)](https://youtu.be/uiOuWeXdryE)
-- 🎬 [Quick Guide (Coming Soon)]
+- 🎬 [Quick Teaser (17sec)](https://youtu.be/x0ZPEmYtgFM)
 
 ### Part 3: Final Assembly
 
 - 📺 [Full Tutorial (15min)](https://youtu.be/76l32a6Kb90)
-- 🎬 [Quick Guide (Coming Soon)]
+- 🎬 [Quick Teaser (17sec)](https://youtu.be/x0ZPEmYtgFM)
 
 ### Part 4: Firmware & Configuration
 
-- 📺 [Full Tutorial (15min)](Your_New_Video_Link)
-- 🎬 [Quick Guide (Coming Soon)]
+- 📺 [Full Tutorial (15min)](https://youtu.be/q1JSGy7HCL0)
+- 🎬 [Quick Teaser (17sec)](https://youtu.be/x0ZPEmYtgFM)
 
 ## Overview
 
