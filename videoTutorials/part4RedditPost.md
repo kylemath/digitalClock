@@ -43,6 +43,7 @@ DIY LED Clock Series Finale: ESPHome Setup & Home Assistant Integration
 The final part of my LED clock series shows how to integrate everything with Home Assistant!
 
 🎬 Complete Series:
+
 - [Part 1: 3D Printing](https://youtu.be/DS_muPDX8p8)
 - [Part 2: Electronics](https://youtu.be/uiOuWeXdryE)
 - [Part 3: Assembly](https://youtu.be/76l32a6Kb90)
@@ -59,6 +60,7 @@ The final part of my LED clock series shows how to integrate everything with Hom
 - Over-the-air updates
 
 📥 All Resources:
+
 - [GitHub](https://github.com/kylemath/digitalclock)
 - [Printables](https://www.printables.com/model/1101964)
 - [Thingiverse](https://www.thingiverse.com/thing:6861353)
@@ -75,12 +77,14 @@ ESP32 LED Clock Complete Guide: Part 4 - Firmware & Configuration
 Series finale! Complete ESP32 programming guide for our LED clock project.
 
 🎬 Complete Series:
+
 - [Part 1: 3D Printing](https://youtu.be/DS_muPDX8p8)
 - [Part 2: Electronics](https://youtu.be/uiOuWeXdryE)
 - [Part 3: Assembly](https://youtu.be/76l32a6Kb90)
 - [Part 4: Firmware](https://youtu.be/q1JSGy7HCL0)
 
 🔧 Technical Details:
+
 - ESPHome configuration
 - WS2812B control
 - WiFi setup
@@ -89,6 +93,7 @@ Series finale! Complete ESP32 programming guide for our LED clock project.
 - Power management
 
 📥 All Resources:
+
 - [GitHub](https://github.com/kylemath/digitalclock)
 - [Printables](https://www.printables.com/model/1101964)
 - [Thingiverse](https://www.thingiverse.com/thing:6861353)
