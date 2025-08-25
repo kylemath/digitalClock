@@ -185,28 +185,38 @@ void setup() {
   //   effects:
   //   - addressable_lambda:
   //       name: Show Time
-  //       update_interval: 1000ms
-  //       lambda: !lambda "static Color sign_color = Color(0, 255, 0);\nstatic const Color
-  //         \ off_color = Color(0, 0, 0);\n\nauto time = id(sntp_time).now();\nint hours
-  //         \ = time.hour;\nint minutes = time.minute;\n\n Choose brightness based on
-  //         \ time\nif (hours >= 20 || hours < 7) {\n   Night time (8 PM - 7 AM) - dimmer
-  //         \ red\n  sign_color = Color(0, 127, 0);   GRB order: (Green=0, Red=127, Blue=0)\n
-  //         } else {\n   Day time (7 AM - 8 PM) - full red\n  sign_color = Color(0, 255,
-  //         \ 0);   GRB order: (Green=0, Red=255, Blue=0)\n}\n\n Convert to 12-hour
-  //         \ format\nif (hours > 12) hours -= 12;\nif (hours == 0) hours = 12;\n\n Redefine
-  //         \ segments array to match physical layout\n Index meaning:\n [0] = left
-  //         \ top vertical\n [1] = top horizontal\n [2] = middle horizontal (appears
-  //         \ on both strips)\n [3] = right top vertical\n [4] = left bottom vertical\n
-  //          [5] = bottom horizontal\n [6] = middle horizontal (same as [2])\n [7]
-  //         \ = right bottom vertical\nstatic const uint8_t SEGMENTS[10][8] = {\n  {1, 1,
-  //         \ 0, 1, 1, 1, 0, 1},     0\n  {0, 0, 0, 1, 0, 0, 0, 1},     1\n  {0, 1,
-  //         \ 1, 1, 1, 1, 1, 0},     2\n  {0, 1, 1, 1, 0, 1, 1, 1},     3\n  {1, 0,
-  //         \ 1, 1, 0, 0, 1, 1},     4\n  {1, 1, 1, 0, 0, 1, 1, 1},     5\n  {1, 1,
-  //         \ 1, 0, 1, 1, 1, 1},     6\n  {0, 1, 0, 1, 0, 0, 0, 1},     7\n  {1, 1,
-  //         \ 1, 1, 1, 1, 1, 1},     8\n  {1, 1, 1, 1, 0, 1, 1, 1}      9\n};\n\n
-  //         \ Updated display_digit function for new layout\nauto display_digit = [&](int
-  //         \ digit_position, int number) {\n  if (number < 0 || number > 9) return;\n 
-  //         \ \n   Calculate top LED positions, accounting for colon LEDs\n  int top_start;\n
+  //       update_interval: 16ms
+  //       lambda: !lambda "static Color last_color(0, 255, 0);\nstatic Color target_color(0,
+  //         \ 255, 0);\nstatic uint32_t last_color_change = 0;\nstatic const uint32_t COLOR_CHANGE_INTERVAL
+  //         \ = 1000;   1 second\n\n Define colors\nColor off_color(0, 0, 0);\nColor
+  //         \ display_color;\n\n Get current milliseconds\nuint32_t current_millis = millis();\n
+  //         \n Check if it's time to generate a new target color\nif (current_millis -
+  //         \ last_color_change >= COLOR_CHANGE_INTERVAL) {\n  last_color = target_color;\n
+  //         \   Generate new random color (keeping reasonable brightness)\n  target_color
+  //         \ = Color(random(0, 256), random(0, 256), random(0, 256));\n  last_color_change
+  //         \ = current_millis;\n}\n\n Calculate interpolation factor (0.0 to 1.0)\nfloat
+  //         \ progress = (float)(current_millis - last_color_change) / COLOR_CHANGE_INTERVAL;\n
+  //         if (progress > 1.0f) progress = 1.0f;\n\n Interpolate between current and
+  //         \ target color\ndisplay_color = Color(\n  last_color.r + (target_color.r - last_color.r)
+  //         \ * progress,\n  last_color.g + (target_color.g - last_color.g) * progress,\n
+  //         \  last_color.b + (target_color.b - last_color.b) * progress\n);\n\n Night
+  //         \ time dimming\nauto time = id(sntp_time).now();\nint hours = time.hour;\nint
+  //         \ minutes = time.minute;\n\nif (hours >= 20 || hours < 7) {\n  display_color
+  //         \ = Color(\n    display_color.r / 2,\n    display_color.g / 2,\n    display_color.b
+  //         \ / 2\n  );\n}\n\n Convert to 12-hour format\nif (hours > 12) hours -= 12;\n
+  //         if (hours == 0) hours = 12;\n\n Redefine segments array to match physical
+  //         \ layout\n Index meaning:\n [0] = left top vertical\n [1] = top horizontal\n
+  //          [2] = middle horizontal (appears on both strips)\n [3] = right top vertical\n
+  //          [4] = left bottom vertical\n [5] = bottom horizontal\n [6] = middle horizontal
+  //         \ (same as [2])\n [7] = right bottom vertical\nstatic const uint8_t SEGMENTS[10][8]
+  //         \ = {\n  {1, 1, 0, 1, 1, 1, 0, 1},     0\n  {0, 0, 0, 1, 0, 0, 0, 1},    
+  //         \ 1\n  {0, 1, 1, 1, 1, 1, 1, 0},     2\n  {0, 1, 1, 1, 0, 1, 1, 1},    
+  //         \ 3\n  {1, 0, 1, 1, 0, 0, 1, 1},     4\n  {1, 1, 1, 0, 0, 1, 1, 1},    
+  //         \ 5\n  {1, 1, 1, 0, 1, 1, 1, 1},     6\n  {0, 1, 0, 1, 0, 0, 0, 1},    
+  //         \ 7\n  {1, 1, 1, 1, 1, 1, 1, 1},     8\n  {1, 1, 1, 1, 0, 1, 1, 1}     
+  //         \ 9\n};\n\n Updated display_digit function for new layout\nauto display_digit
+  //         \ = [&](int digit_position, int number) {\n  if (number < 0 || number > 9) return;\n
+  //         \  \n   Calculate top LED positions, accounting for colon LEDs\n  int top_start;\n
   //         \  if (digit_position <= 1) {\n      top_start = digit_position * 4;   First
   //         \ two digits: 0-3, 4-7\n  } else if (digit_position <= 3) {\n      top_start
   //         \ = (digit_position * 4) + 1;   Middle digits: 9-12, 13-16\n  } else {\n 
@@ -217,17 +227,17 @@ void setup() {
   //         \ <= 3) {\n      bottom_start = 42 - ((digit_position - 2) * 4);   Middle
   //         \ digits: 39-42, 35-38\n  } else {\n      bottom_start = 33 - ((digit_position
   //         \ - 4) * 4);   Last two digits: 30-33, 26-29\n  }\n  \n   Top row LEDs (left
-  //         \ to right)\n  it[top_start].set(SEGMENTS[number][0] ? sign_color : off_color);
-  //         \      left top vertical\n  it[top_start + 1].set(SEGMENTS[number][1] ? sign_color
+  //         \ to right)\n  it[top_start].set(SEGMENTS[number][0] ? display_color : off_color);
+  //         \      left top vertical\n  it[top_start + 1].set(SEGMENTS[number][1] ? display_color
   //         \ : off_color);  top horizontal\n  it[top_start + 2].set(SEGMENTS[number][2]
-  //         \ ? sign_color : off_color);  middle horizontal\n  it[top_start + 3].set(SEGMENTS[number][3]
-  //         \ ? sign_color : off_color);  right top vertical\n  \n   Bottom row LEDs
-  //         \ (right to left)\n  it[bottom_start - 3].set(SEGMENTS[number][7] ? sign_color
+  //         \ ? display_color : off_color);  middle horizontal\n  it[top_start + 3].set(SEGMENTS[number][3]
+  //         \ ? display_color : off_color);  right top vertical\n  \n   Bottom row LEDs
+  //         \ (right to left)\n  it[bottom_start - 3].set(SEGMENTS[number][7] ? display_color
   //         \ : off_color);  right bottom vertical\n  it[bottom_start - 2].set(SEGMENTS[number][5]
-  //         \ ? sign_color : off_color);  bottom horizontal\n  it[bottom_start - 1].set(SEGMENTS[number][2]
-  //         \ ? sign_color : off_color);  middle horizontal\n  it[bottom_start].set(SEGMENTS[number][4]
-  //         \ ? sign_color : off_color);      left bottom vertical\n};\n\n Clear all
-  //         \ LEDs first\nfor (int i = 0; i < it.size(); i++) {\n  it[i].set(off_color);\n
+  //         \ ? display_color : off_color);  bottom horizontal\n  it[bottom_start - 1].set(SEGMENTS[number][2]
+  //         \ ? display_color : off_color);  middle horizontal\n  it[bottom_start].set(SEGMENTS[number][4]
+  //         \ ? display_color : off_color);      left bottom vertical\n};\n\n Clear
+  //         \ all LEDs first\nfor (int i = 0; i < it.size(); i++) {\n  it[i].set(off_color);\n
   //         }\n\n Display time digits (positions 0-5, from left to right)\nif (hours <
   //         \ 10) {\n   Hours < 10, leave first digit blank\n  display_digit(1, hours);
   //         \           Hours in ones position\n} else {\n   Hours 10-12, show both
@@ -237,9 +247,9 @@ void setup() {
   //         \ % 10);     Minutes ones\n\n Always show both digits for seconds\nint seconds
   //         \ = time.second;\ndisplay_digit(4, seconds / 10);     Seconds tens\ndisplay_digit(5,
   //         \ seconds % 10);     Seconds ones\n\n Colons - both top and bottom should
-  //         \ be lit\nit[8].set(sign_color);     First colon top\nit[43].set(sign_color);
-  //         \    First colon bottom\nit[17].set(sign_color);    Second colon top\nit[34].set(sign_color);
-  //         \    Second colon bottom"
+  //         \ be lit\nit[8].set(display_color);     First colon top\nit[43].set(display_color);
+  //         \    First colon bottom\nit[17].set(display_color);    Second colon top\n
+  //         it[34].set(display_color);    Second colon bottom"
   //     type_id: light_addressablelambdalighteffect_id
   //   disabled_by_default: false
   //   gamma_correct: 2.8
@@ -261,21 +271,49 @@ void setup() {
   led_strip->set_flash_transition_length(0);
   led_strip->set_gamma_correct(2.8f);
   light_addressablelambdalighteffect_id = new light::AddressableLambdaLightEffect("Show Time", [=](light::AddressableLight & it, Color current_color, bool initial_run) -> void {
-      #line 49 "firmwareV5_SixDigitMonolith/led-digit.yaml"
-      static Color sign_color = Color(0, 255, 0);
-      static const Color off_color = Color(0, 0, 0);
+      #line 49 "./Firmware_SixDigits.yaml"
+      static Color last_color(0, 255, 0);
+      static Color target_color(0, 255, 0);
+      static uint32_t last_color_change = 0;
+      static const uint32_t COLOR_CHANGE_INTERVAL = 1000;   
       
+       
+      Color off_color(0, 0, 0);
+      Color display_color;
+      
+       
+      uint32_t current_millis = millis();
+      
+       
+      if (current_millis - last_color_change >= COLOR_CHANGE_INTERVAL) {
+        last_color = target_color;
+         
+        target_color = Color(random(0, 256), random(0, 256), random(0, 256));
+        last_color_change = current_millis;
+      }
+      
+       
+      float progress = (float)(current_millis - last_color_change) / COLOR_CHANGE_INTERVAL;
+      if (progress > 1.0f) progress = 1.0f;
+      
+       
+      display_color = Color(
+        last_color.r + (target_color.r - last_color.r) * progress,
+        last_color.g + (target_color.g - last_color.g) * progress,
+        last_color.b + (target_color.b - last_color.b) * progress
+      );
+      
+       
       auto time = sntp_time->now();
       int hours = time.hour;
       int minutes = time.minute;
       
-       
       if (hours >= 20 || hours < 7) {
-         
-        sign_color = Color(0, 127, 0);   
-      } else {
-         
-        sign_color = Color(0, 255, 0);   
+        display_color = Color(
+          display_color.r / 2,
+          display_color.g / 2,
+          display_color.b / 2
+        );
       }
       
        
@@ -330,16 +368,16 @@ void setup() {
         }
         
          
-        it[top_start].set(SEGMENTS[number][0] ? sign_color : off_color);      
-        it[top_start + 1].set(SEGMENTS[number][1] ? sign_color : off_color);  
-        it[top_start + 2].set(SEGMENTS[number][2] ? sign_color : off_color);  
-        it[top_start + 3].set(SEGMENTS[number][3] ? sign_color : off_color);  
+        it[top_start].set(SEGMENTS[number][0] ? display_color : off_color);      
+        it[top_start + 1].set(SEGMENTS[number][1] ? display_color : off_color);  
+        it[top_start + 2].set(SEGMENTS[number][2] ? display_color : off_color);  
+        it[top_start + 3].set(SEGMENTS[number][3] ? display_color : off_color);  
         
          
-        it[bottom_start - 3].set(SEGMENTS[number][7] ? sign_color : off_color);  
-        it[bottom_start - 2].set(SEGMENTS[number][5] ? sign_color : off_color);  
-        it[bottom_start - 1].set(SEGMENTS[number][2] ? sign_color : off_color);  
-        it[bottom_start].set(SEGMENTS[number][4] ? sign_color : off_color);      
+        it[bottom_start - 3].set(SEGMENTS[number][7] ? display_color : off_color);  
+        it[bottom_start - 2].set(SEGMENTS[number][5] ? display_color : off_color);  
+        it[bottom_start - 1].set(SEGMENTS[number][2] ? display_color : off_color);  
+        it[bottom_start].set(SEGMENTS[number][4] ? display_color : off_color);      
       };
       
        
@@ -367,11 +405,11 @@ void setup() {
       display_digit(5, seconds % 10);     
       
        
-      it[8].set(sign_color);     
-      it[43].set(sign_color);    
-      it[17].set(sign_color);    
-      it[34].set(sign_color);    
-  }, 1000);
+      it[8].set(display_color);     
+      it[43].set(display_color);    
+      it[17].set(display_color);    
+      it[34].set(display_color);    
+  }, 16);
   led_strip->add_effects({light_addressablelambdalighteffect_id});
   light_lightturnontrigger_id = new light::LightTurnOnTrigger(led_strip);
   automation_id = new Automation<>(light_lightturnontrigger_id);
