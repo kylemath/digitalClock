@@ -44,22 +44,50 @@ light:
     effects:
       - addressable_lambda:
           name: "Show Time"
-          update_interval: 1000ms
+          update_interval: 16ms
           lambda: |-
-            static Color sign_color = Color(0, 255, 0);
-            static const Color off_color = Color(0, 0, 0);
-
+            static Color last_color(0, 255, 0);
+            static Color target_color(0, 255, 0);
+            static uint32_t last_color_change = 0;
+            static const uint32_t COLOR_CHANGE_INTERVAL = 1000;  // 1 second
+            
+            // Define colors
+            Color off_color(0, 0, 0);
+            Color display_color;
+            
+            // Get current milliseconds
+            uint32_t current_millis = millis();
+            
+            // Check if it's time to generate a new target color
+            if (current_millis - last_color_change >= COLOR_CHANGE_INTERVAL) {
+              last_color = target_color;
+              // Generate new random color (keeping reasonable brightness)
+              target_color = Color(random(0, 256), random(0, 256), random(0, 256));
+              last_color_change = current_millis;
+            }
+            
+            // Calculate interpolation factor (0.0 to 1.0)
+            float progress = (float)(current_millis - last_color_change) / COLOR_CHANGE_INTERVAL;
+            if (progress > 1.0f) progress = 1.0f;
+            
+            // Interpolate between current and target color
+            display_color = Color(
+              last_color.r + (target_color.r - last_color.r) * progress,
+              last_color.g + (target_color.g - last_color.g) * progress,
+              last_color.b + (target_color.b - last_color.b) * progress
+            );
+            
+            // Night time dimming
             auto time = id(sntp_time).now();
             int hours = time.hour;
             int minutes = time.minute;
-
-            // Choose brightness based on time
+            
             if (hours >= 20 || hours < 7) {
-              // Night time (8 PM - 7 AM) - dimmer red
-              sign_color = Color(0, 127, 0);  // GRB order: (Green=0, Red=127, Blue=0)
-            } else {
-              // Day time (7 AM - 8 PM) - full red
-              sign_color = Color(0, 255, 0);  // GRB order: (Green=0, Red=255, Blue=0)
+              display_color = Color(
+                display_color.r / 2,
+                display_color.g / 2,
+                display_color.b / 2
+              );
             }
 
             // Convert to 12-hour format
@@ -114,16 +142,16 @@ light:
               }
               
               // Top row LEDs (left to right)
-              it[top_start].set(SEGMENTS[number][0] ? sign_color : off_color);     // left top vertical
-              it[top_start + 1].set(SEGMENTS[number][1] ? sign_color : off_color); // top horizontal
-              it[top_start + 2].set(SEGMENTS[number][2] ? sign_color : off_color); // middle horizontal
-              it[top_start + 3].set(SEGMENTS[number][3] ? sign_color : off_color); // right top vertical
+              it[top_start].set(SEGMENTS[number][0] ? display_color : off_color);     // left top vertical
+              it[top_start + 1].set(SEGMENTS[number][1] ? display_color : off_color); // top horizontal
+              it[top_start + 2].set(SEGMENTS[number][2] ? display_color : off_color); // middle horizontal
+              it[top_start + 3].set(SEGMENTS[number][3] ? display_color : off_color); // right top vertical
               
               // Bottom row LEDs (right to left)
-              it[bottom_start - 3].set(SEGMENTS[number][7] ? sign_color : off_color); // right bottom vertical
-              it[bottom_start - 2].set(SEGMENTS[number][5] ? sign_color : off_color); // bottom horizontal
-              it[bottom_start - 1].set(SEGMENTS[number][2] ? sign_color : off_color); // middle horizontal
-              it[bottom_start].set(SEGMENTS[number][4] ? sign_color : off_color);     // left bottom vertical
+              it[bottom_start - 3].set(SEGMENTS[number][7] ? display_color : off_color); // right bottom vertical
+              it[bottom_start - 2].set(SEGMENTS[number][5] ? display_color : off_color); // bottom horizontal
+              it[bottom_start - 1].set(SEGMENTS[number][2] ? display_color : off_color); // middle horizontal
+              it[bottom_start].set(SEGMENTS[number][4] ? display_color : off_color);     // left bottom vertical
             };
 
             // Clear all LEDs first
@@ -151,8 +179,8 @@ light:
             display_digit(5, seconds % 10);    // Seconds ones
 
             // Colons - both top and bottom should be lit
-            it[8].set(sign_color);    // First colon top
-            it[43].set(sign_color);   // First colon bottom
-            it[17].set(sign_color);   // Second colon top
-            it[34].set(sign_color);   // Second colon bottom
+            it[8].set(display_color);    // First colon top
+            it[43].set(display_color);   // First colon bottom
+            it[17].set(display_color);   // Second colon top
+            it[34].set(display_color);   // Second colon bottom
 
