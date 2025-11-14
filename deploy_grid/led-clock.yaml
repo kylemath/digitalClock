@@ -1,0 +1,478 @@
+substitutions:
+  name: led-clock
+
+esphome:
+  name: ${name}
+  min_version: 2024.6.0
+  platformio_options:
+    board_build.f_cpu: 80000000L  # Run at 80MHz instead of 160MHz
+  on_boot:
+    then:
+      - light.turn_on: 
+          id: clock_rgb
+          brightness: 80%
+          red: 0%
+          green: 100%
+          blue: 0%
+      - display.page.show: clock_page
+
+esp8266:
+  board: d1_mini
+  restore_from_flash: true
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  
+  # manual_ip:
+  #   static_ip: 192.168.1.222
+  #   gateway: 192.168.1.1
+  #   subnet: 255.255.255.0
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "${name} Fallback"
+    password: !secret ota_password
+    channel: 4
+
+captive_portal:
+
+# Enable logging
+logger:
+  level: DEBUG
+  esp8266_store_log_strings_in_flash: true
+  logs:
+    wifi: DEBUG
+    esp8266: DEBUG
+    display: INFO
+    light: INFO
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  platform: esphome
+  password: !secret ota_password
+
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: "America/Edmonton"
+    servers:
+      - 0.pool.ntp.org
+      - 1.pool.ntp.org
+      - 2.pool.ntp.org
+    on_time_sync:
+      then:
+        - globals.set:
+            id: tyme_synced
+            value: 'true'
+        - if:
+            condition:
+              lambda: 'return id(tyme_synced);'
+            then:
+              - lambda: |-
+                  auto time = id(sntp_time).now();
+                  id(previousTimeValue)[0] = time.hour / 10;
+                  id(previousTimeValue)[1] = time.hour % 10;
+                  id(previousTimeValue)[2] = time.minute / 10;
+                  id(previousTimeValue)[3] = time.minute % 10;
+              - display.page.show: clock_page
+    on_time:
+      # Dim at 11 PM
+      - seconds: 0
+        minutes: 0
+        hours: 23
+        then:
+          - logger.log: "11:00 PM - Dimming for night"
+          - lambda: |-
+              id(red_value) = 0;            // Pure green at 50%
+              id(green_value) = 127;        // 127 is ~50% of 255
+              id(blue_value) = 0;
+
+      # Return to full brightness at 7 AM
+      - seconds: 0
+        minutes: 0
+        hours: 7
+        then:
+          - logger.log: "7:00 AM - Back to full brightness"
+          - lambda: |-
+              id(red_value) = 0;            // Pure green at 100%
+              id(green_value) = 255;
+              id(blue_value) = 0;
+
+      # Morning red transition starts at 7:30
+      - seconds: 0
+        minutes: 30
+        hours: 7
+        then:
+          - logger.log: "7:30 AM - Starting transition to red"
+          - lambda: |-
+              id(red_value) = 64;           // Start adding some red
+              id(green_value) = 255;        // Keep full green
+              id(blue_value) = 0;           // No blue
+              
+      # Gradually increase red and decrease green
+      - seconds: 0
+        minutes: 40
+        hours: 7
+        then:
+          - logger.log: "7:40 AM - More red, less green"
+          - lambda: |-
+              id(red_value) = 127;          // More red
+              id(green_value) = 191;        // Less green
+              
+      - seconds: 0
+        minutes: 50
+        hours: 7
+        then:
+          - logger.log: "7:50 AM - Even more red"
+          - lambda: |-
+              id(red_value) = 191;          // Even more red
+              id(green_value) = 127;        // Even less green
+              
+      - seconds: 0
+        minutes: 0
+        hours: 8
+        then:
+          - logger.log: "8:00 AM - Mostly red"
+          - lambda: |-
+              id(red_value) = 255;          // Full red
+              id(green_value) = 64;         // Very little green
+              
+      - seconds: 0
+        minutes: 10
+        hours: 8
+        then:
+          - logger.log: "8:10 AM - Almost pure red"
+          - lambda: |-
+              id(red_value) = 255;          // Full red
+              id(green_value) = 32;         // Almost no green
+              
+      # Return to green at 8:20
+      - seconds: 0
+        minutes: 30
+        hours: 8
+        then:
+          - logger.log: "8:30 AM - Back to green"
+          - lambda: |-
+              id(red_value) = 0;            // Back to pure green
+              id(green_value) = 255;
+              id(blue_value) = 0;
+
+globals:
+  - id: red_value
+    type: int
+    restore_value: yes
+    initial_value: '0'
+
+  - id: green_value
+    type: int
+    restore_value: yes
+    initial_value: '255'
+
+  - id: blue_value
+    type: int
+    restore_value: yes
+    initial_value: '0'
+  
+  - id: tyme_synced
+    type: bool      
+    restore_value: no
+    initial_value: 'false'
+
+  - id: previousTimeValue
+    type: int[4]
+    restore_value: no
+    initial_value: '{0, 0, 0, 0}'
+  
+output:
+  - platform: template
+    id: red_output
+    type: float
+    min_power: 0.2
+    max_power: .5
+    write_action:
+      lambda: |-
+        id(red_value) = 255.0 * state;
+
+  - platform: template
+    id: green_output
+    type: float
+    min_power: 0.2
+    max_power: 0.5
+    write_action:
+      - lambda: |-
+          id(green_value) = 255.0 * state;
+
+  - platform: template
+    id: blue_output
+    type: float
+    min_power: 0.2
+    max_power: 0.5
+    write_action:
+      lambda: |-
+        id(blue_value) = 255.0 * state;
+
+color:
+- id: color_black
+  red: 0%
+  green: 0%
+  blue: 0%
+
+- id: color_white
+  red: 10%
+  green: 10%
+  blue: 10%
+
+
+light: 
+  - platform: rgb
+    name: "LED clock RGB"
+    id: 'clock_rgb'
+    gamma_correct: 1.8
+    red: red_output
+    green: green_output
+    blue: blue_output
+
+  - platform: neopixelbus
+    id: led_matrix
+    name: "Led strip"
+    internal: True
+    pin: GPIO4
+    num_leds: 85
+    variant: WS2812
+    type: GRB
+
+display:
+  - platform: addressable_light
+    id: led_matrix_display
+    addressable_light_id: led_matrix
+    width: 17
+    height: 5
+    pixel_mapper: |-
+      if (y % 2 == 0) {
+        return (y * 17) + x;
+      }
+      return (y * 17) + (16 - x);
+    rotation: 0°
+    update_interval: 20ms
+    pages:
+      - id: clock_page
+        lambda: |-
+          Color color(id(red_value), id(green_value), id(blue_value));
+
+          const int digitsCount = 4;            
+          auto time = id(sntp_time).now();
+
+          // Convert to 12-hour format
+          int hour = time.hour;
+          if (hour > 12) {
+            hour -= 12;
+          }
+          if (hour == 0) {
+            hour = 12;
+          }
+
+          int timeValue[digitsCount] = {
+            hour / 10,
+            hour % 10,
+            time.minute / 10,
+            time.minute % 10
+          };
+          
+          // Adjust positions based on if hour is single or double digit
+          const int base_offset = (hour < 10) ? 0 : 0;
+          const int digit_location_X[digitsCount] = {
+            base_offset + 0,      // First hour digit
+            base_offset + 4,      // Second hour digit
+            base_offset + 10,     // First minute digit
+            base_offset + 14      // Second minute digit
+          };
+          const int digit_location_Y[digitsCount] = {0, 0, 0, 0};
+          const bool enableColon = true;
+          const int colon_location_X = base_offset + 8;  // Colon position
+
+          // Add after the existing color definition
+          Color second_color(64, 0, 0);    // Dim red (25% of 255)
+          Color blink_color;
+          
+          // Calculate which pixel we're on and its blink state
+          int current_pixel = (time.second - 1) / 3;    // Which pixel (0-19)
+          int within_group = (time.second - 1) % 3;     // Position within 3-second group (0,1,2)
+          
+          // Get milliseconds for sub-second timing
+          uint32_t current_millis = millis();
+          bool in_blink_window = (current_millis % 1000) < 200;  // Blink for first 200ms of each second
+          
+          // Determine current pixel state
+          if (within_group == 2) {
+              blink_color = second_color;
+          } else {
+              blink_color = in_blink_window ? second_color : Color(0, 0, 0);
+          }
+
+          // Function to draw a digit
+          auto draw_digit = [&](int x, int y, int digit) {
+            switch(digit) {
+              case 0:
+                // Draw 0
+                for(int i = 0; i < 5; i++) {
+                  it.draw_pixel_at(x, y+i, color);     // Left vertical
+                  it.draw_pixel_at(x+2, y+i, color);   // Right vertical
+                }
+                it.draw_pixel_at(x+1, y, color);       // Top horizontal
+                it.draw_pixel_at(x+1, y+4, color);     // Bottom horizontal
+                break;
+              case 1:
+                // Draw 1
+                for(int i = 0; i < 5; i++) {
+                  it.draw_pixel_at(x+1, y+i, color);   // Center vertical
+                }
+                break;
+              case 2:
+                // Draw 2 (more rounded)
+                it.draw_pixel_at(x, y, color);         // Top left
+                it.draw_pixel_at(x+1, y, color);       // Top middle
+                it.draw_pixel_at(x+2, y, color);       // Top right
+                it.draw_pixel_at(x+2, y+1, color);     // Upper right
+                it.draw_pixel_at(x+2, y+2, color);     // Middle right
+                it.draw_pixel_at(x+1, y+2, color);     // Middle
+                it.draw_pixel_at(x, y+2, color);       // Middle left
+                it.draw_pixel_at(x, y+3, color);       // Lower left
+                it.draw_pixel_at(x, y+4, color);       // Bottom left
+                it.draw_pixel_at(x+1, y+4, color);     // Bottom middle
+                it.draw_pixel_at(x+2, y+4, color);     // Bottom right
+                break;
+              case 3:
+                // Draw 3
+                for(int i = 0; i < 5; i++) {
+                  it.draw_pixel_at(x+2, y+i, color);   // Right vertical
+                }
+                it.draw_pixel_at(x, y, color);         // Top left
+                it.draw_pixel_at(x+1, y, color);       // Top middle
+                it.draw_pixel_at(x+1, y+2, color);     // Middle
+                it.draw_pixel_at(x, y+4, color);       // Bottom left
+                it.draw_pixel_at(x+1, y+4, color);     // Bottom middle
+                break;
+              case 4:
+                // Draw 4
+                for(int i = 0; i < 5; i++) {
+                  it.draw_pixel_at(x+2, y+i, color);   // Right vertical
+                }
+                for(int i = 0; i < 3; i++) {
+                  it.draw_pixel_at(x, y+i, color);     // Left vertical (partial)
+                }
+                it.draw_pixel_at(x+1, y+2, color);     // Middle
+                break;
+              case 5:
+                // Draw 5
+                it.draw_pixel_at(x, y, color);         // Top left
+                it.draw_pixel_at(x+1, y, color);       // Top middle
+                it.draw_pixel_at(x+2, y, color);       // Top right
+                it.draw_pixel_at(x, y+1, color);       // Upper left
+                it.draw_pixel_at(x+1, y+2, color);     // Middle
+                it.draw_pixel_at(x+2, y+3, color);     // Lower right
+                it.draw_pixel_at(x, y+4, color);       // Bottom left
+                it.draw_pixel_at(x+1, y+4, color);     // Bottom middle
+                it.draw_pixel_at(x+2, y+4, color);     // Bottom right
+                break;
+              case 6:
+                // Draw 6 (fixed bottom circle)
+                for(int i = 0; i < 5; i++) {
+                  it.draw_pixel_at(x, y+i, color);     // Left vertical
+                }
+                it.draw_pixel_at(x+1, y, color);       // Top middle
+                it.draw_pixel_at(x+2, y, color);       // Top right
+                it.draw_pixel_at(x+1, y+2, color);     // Middle
+                it.draw_pixel_at(x+2, y+2, color);     // Middle right
+                it.draw_pixel_at(x+2, y+3, color);     // Lower right
+                it.draw_pixel_at(x+1, y+4, color);     // Bottom middle
+                it.draw_pixel_at(x+2, y+4, color);     // Bottom right
+                break;
+              case 7:
+                // Draw 7
+                it.draw_pixel_at(x, y, color);         // Top left
+                it.draw_pixel_at(x+1, y, color);       // Top middle
+                it.draw_pixel_at(x+2, y, color);       // Top right
+                for(int i = 1; i < 5; i++) {
+                  it.draw_pixel_at(x+2, y+i, color);   // Right vertical
+                }
+                break;
+              case 8:
+                // Draw 8
+                for(int i = 0; i < 5; i++) {
+                  it.draw_pixel_at(x, y+i, color);     // Left vertical
+                  it.draw_pixel_at(x+2, y+i, color);   // Right vertical
+                }
+                it.draw_pixel_at(x+1, y, color);       // Top middle
+                it.draw_pixel_at(x+1, y+2, color);     // Middle
+                it.draw_pixel_at(x+1, y+4, color);     // Bottom middle
+                break;
+              case 9:
+                // Draw 9
+                for(int i = 0; i < 5; i++) {
+                  it.draw_pixel_at(x+2, y+i, color);   // Right vertical
+                }
+                it.draw_pixel_at(x, y, color);         // Top left
+                it.draw_pixel_at(x+1, y, color);       // Top middle
+                it.draw_pixel_at(x, y+1, color);       // Upper left
+                it.draw_pixel_at(x+1, y+2, color);     // Middle
+                it.draw_pixel_at(x+1, y+4, color);     // Bottom middle
+                break;
+            }
+          };
+
+          for(int i=0; i<digitsCount; i++) {
+            // Skip drawing leading zero for hours
+            if (i == 0 && hour < 10) {
+              continue;  // Skip first digit for single-digit hours
+            }
+            draw_digit(digit_location_X[i], digit_location_Y[i], timeValue[i]);
+          }
+
+          if (enableColon) {
+            it.draw_pixel_at(colon_location_X, 1, color);
+            it.draw_pixel_at(colon_location_X, 3, color);
+          }
+
+          // Draw seconds visualization
+          if (time.second > 0) {
+            // Row 3 (leftmost, between 1st and 2nd digit)
+            for (int i = 0; i < 5; i++) {
+              if (current_pixel > i) {
+                it.draw_pixel_at(3, i, second_color);  // Previous pixels stay solid
+              } else if (current_pixel == i) {
+                it.draw_pixel_at(3, i, blink_color);   // Current pixel follows blink pattern
+              }
+            }
+            
+            // Row 7 (left of colon)
+            for (int i = 0; i < 5; i++) {
+              if (current_pixel > i + 5) {
+                it.draw_pixel_at(7, i, second_color);
+              } else if (current_pixel == i + 5) {
+                it.draw_pixel_at(7, i, blink_color);
+              }
+            }
+            
+            // Row 9 (right of colon)
+            for (int i = 0; i < 5; i++) {
+              if (current_pixel > i + 10) {
+                it.draw_pixel_at(9, i, second_color);
+              } else if (current_pixel == i + 10) {
+                it.draw_pixel_at(9, i, blink_color);
+              }
+            }
+            
+            // Row 13 (rightmost, between 3rd and 4th digit)
+            for (int i = 0; i < 5; i++) {
+              if (current_pixel > i + 15) {
+                it.draw_pixel_at(13, i, second_color);
+              } else if (current_pixel == i + 15) {
+                it.draw_pixel_at(13, i, blink_color);
+              }
+            }
+          }

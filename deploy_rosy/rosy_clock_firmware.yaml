@@ -1,0 +1,159 @@
+# 'esphome --dashboard run ./deploy_rosy/rosy_clock_firmware.yaml --device OTA
+esphome:
+  name: 6-digit-clock-inone
+  friendly_name: SixDigit Clock In One
+
+esp8266:
+  board: d1_mini
+
+# Add this time component
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: America/Edmonton # Change this to your timezone
+
+logger:
+
+ota:
+  platform: esphome
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  ap:
+    ssid: "Seven-Seg-Test"
+    password: "configureme"
+
+light:
+  - platform: neopixelbus
+    id: led_strip
+    name: "LED Strip"
+    type: RGB
+    pin: GPIO4
+    num_leds: 52
+    variant: WS2812
+    default_transition_length: 0s
+    restore_mode: ALWAYS_ON
+    on_turn_on:
+      then:
+        - light.turn_on:
+            id: led_strip
+            effect: "Show Time"
+    effects:
+      - addressable_lambda:
+          name: "Show Time"
+          update_interval: 16ms
+          lambda: |-
+            //================ BASIC COLORS =================
+            Color off_color(0, 0, 0);      // Black/off
+            
+            // Get current hour for brightness adjustment
+            auto current_time = id(sntp_time).now();
+            int current_hour = current_time.hour;
+            float brightness_factor = ((current_hour >= 20 || current_hour < 7) ? 0.25 : 1.0);
+            
+            // Apply brightness factor to all colors
+            Color purple(128 * brightness_factor, 0, 128 * brightness_factor);     // Saturated purple for bottom
+            Color purple_white(192 * brightness_factor, 128 * brightness_factor, 192 * brightness_factor); // Whitish purple for top
+            Color blue(0, 0, 255 * brightness_factor);         // Saturated blue for bottom
+            Color blue_white(128 * brightness_factor, 128 * brightness_factor, 255 * brightness_factor);   // Whitish blue for top
+            Color white(255 * brightness_factor, 255 * brightness_factor, 255 * brightness_factor);    // White for colons
+            
+            //================ TIME HANDLING ================
+            uint32_t current_millis = millis();
+            int hours = current_time.hour;
+            int minutes = current_time.minute;
+            int seconds = current_time.second;
+
+            //================ TIME FORMAT CONVERSION ================
+            // Convert 24h to 12h format
+            if (hours > 12) hours -= 12;
+            if (hours == 0) hours = 12;
+
+            //================ SEGMENT DEFINITIONS ================
+            // Each number's segment layout
+            static const uint8_t SEGMENTS[10][8] = {
+              {1, 1, 0, 1, 1, 1, 0, 1},    // 0
+              {0, 0, 0, 1, 0, 0, 0, 1},    // 1
+              {0, 1, 1, 1, 1, 1, 1, 0},    // 2
+              {0, 1, 1, 1, 0, 1, 1, 1},    // 3
+              {1, 0, 1, 1, 0, 0, 1, 1},    // 4
+              {1, 1, 1, 0, 0, 1, 1, 1},    // 5
+              {1, 1, 1, 0, 1, 1, 1, 1},    // 6
+              {0, 1, 0, 1, 0, 0, 0, 1},    // 7
+              {1, 1, 1, 1, 1, 1, 1, 1},    // 8
+              {1, 1, 1, 1, 0, 1, 1, 1}     // 9
+            };
+
+            //================ DISPLAY FUNCTION ================
+            auto display_digit = [&](int digit_position, int number) {
+              if (number < 0 || number > 9) return;
+              
+              // Choose colors based on digit position
+              Color display_color_bottom = (digit_position % 2 == 0) ? purple : blue;
+              Color display_color_top = (digit_position % 2 == 0) ? purple_white : blue_white;
+              
+              // Calculate LED positions for top row
+              int top_start;
+              if (digit_position <= 1) {
+                  top_start = digit_position * 4;
+              } else if (digit_position <= 3) {
+                  top_start = (digit_position * 4) + 1;
+              } else {
+                  top_start = (digit_position * 4) + 2;
+              }
+              
+              // Calculate LED positions for bottom row
+              int bottom_start;
+              if (digit_position <= 1) {
+                  bottom_start = 51 - (digit_position * 4);
+              } else if (digit_position <= 3) {
+                  bottom_start = 42 - ((digit_position - 2) * 4);
+              } else {
+                  bottom_start = 33 - ((digit_position - 4) * 4);
+              }
+              
+              // Set LEDs for each segment - top segments use whiter color
+              it[top_start].set(SEGMENTS[number][0] ? display_color_top : off_color);
+              it[top_start + 1].set(SEGMENTS[number][1] ? display_color_top : off_color);
+              it[top_start + 2].set(SEGMENTS[number][2] ? display_color_top : off_color);
+              it[top_start + 3].set(SEGMENTS[number][3] ? display_color_top : off_color);
+              
+              // Bottom segments use more saturated color
+              it[bottom_start - 3].set(SEGMENTS[number][7] ? display_color_bottom : off_color);
+              it[bottom_start - 2].set(SEGMENTS[number][5] ? display_color_bottom : off_color);
+              it[bottom_start - 1].set(SEGMENTS[number][2] ? display_color_bottom : off_color);
+              it[bottom_start].set(SEGMENTS[number][4] ? display_color_bottom : off_color);
+            };
+
+            //================ DISPLAY UPDATE ================
+            // Clear display
+            for (int i = 0; i < it.size(); i++) {
+              it[i].set(off_color);
+            }
+
+            // Show Hours
+            if (hours < 10) {
+              display_digit(1, hours);
+            } else {
+              display_digit(0, hours / 10);
+              display_digit(1, hours % 10);
+            }
+
+            // Show Minutes
+            display_digit(2, minutes / 10);
+            display_digit(3, minutes % 10);
+
+            // Show Seconds
+            display_digit(4, seconds / 10);
+            display_digit(5, seconds % 10);
+
+            //================ COLON DISPLAY ================
+            // Light up the colons in white
+            it[8].set(white);     // First colon top
+            it[43].set(white);    // First colon bottom
+            it[17].set(white);    // Second colon top
+            it[34].set(white);    // Second colon bottom
+

@@ -1,0 +1,142 @@
+esphome:
+  name: six-digit-clock
+  friendly_name: Six Digit Clock
+
+esp8266:
+  board: d1_mini
+# Add time component after logger:
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: America/Edmonton # Change this to your timezone
+
+logger:
+
+# Add OTA configuration
+ota:
+  platform: esphome
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  ap:
+    ssid: "Seven-Seg-Test"
+    password: "configureme"
+
+light:
+  - platform: neopixelbus
+    type: RGB
+    pin: GPIO4
+    num_leds: 48
+    name: "LED Strip"
+    id: led_strip
+    variant: WS2812
+    default_transition_length: 0s
+    restore_mode: ALWAYS_ON
+    on_turn_on:
+      then:
+        - light.turn_on:
+            id: led_strip
+            effect: "Show Time"
+    effects:
+      - addressable_lambda:
+          name: "Show Time"
+          update_interval: 16ms
+          lambda: |-
+            static const Color sign_color =  Color(10, 255, 255);  // Cyan
+            static const Color white_color = Color(255, 255, 255);  // White for top segments
+            
+            // Helper function to blend between two colors based on position
+            auto blendColors = [](Color c1, Color c2, float ratio) {
+              return Color(
+                c1.red + (c2.red - c1.red) * ratio,
+                c1.green + (c2.green - c1.green) * ratio,
+                c1.blue + (c2.blue - c1.blue) * ratio
+              );
+            };
+
+            auto displayDigit = [&](int digit, int displayUnit, int ledsPerDigit = 7) {
+              // Calculate the starting LED index for this display unit
+              static const int DISPLAY_UNIT_INDICES[] = {0, 7, 17, 24, 34, 41};
+              int baseIndex = (displayUnit >= 0 && displayUnit < 6) ? DISPLAY_UNIT_INDICES[displayUnit] : 0;
+              
+              // Clear this display unit's LEDs
+              for (int i = baseIndex; i < baseIndex + ledsPerDigit; i++) {
+                it[i] = Color(0, 0, 0);
+              }
+              
+              // Arrays defining which segments are lit for each digit
+              static const uint8_t SEGMENTS[10][7] = {
+                {1, 1, 1, 0, 1, 1, 1},    // 0
+                {0, 1, 0, 0, 0, 1, 0},    // 1
+                {1, 0, 1, 1, 0, 1, 1},    // 2
+                {1, 1, 0, 1, 0, 1, 1},    // 3
+                {0, 1, 0, 1, 1, 1, 0},    // 4
+                {1, 1, 0, 1, 1, 0, 1},    // 5
+                {1, 1, 1, 1, 1, 0, 1},    // 6
+                {0, 1, 0, 0, 0, 1, 1},    // 7
+                {1, 1, 1, 1, 1, 1, 1},    // 8
+                {1, 1, 0, 1, 1, 1, 1}     // 9
+              };
+      
+
+              // Define segment positions for diagonal gradient (0.0 = top-right, 2.0 = bottom-left)
+              static const float SEGMENT_POSITIONS[7] = {
+                2.0,  // Top segment (0) - brighter
+                1.6,  // Bottom-right segment (1) - brightest
+                1.9,  // Bottom-left segment (2) - darkest
+                1.0,  // Middle horizontal segment (3) - middle gradient
+                0.4,  // Left middle segment (4) - darkest
+                0.1,  // Right middle segment (5) - brightest
+                0   // Bottom segment (6) - darker
+              };
+              
+              // Set the appropriate segments for the digit
+              if (digit >= 0 && digit <= 9) {
+                for (int segment = 0; segment < 7; segment++) {
+                  if (SEGMENTS[digit][segment]) {
+                    // Calculate color based on diagonal position
+                    float position_ratio = SEGMENT_POSITIONS[segment] / 2.0;
+                    Color segment_color = blendColors(white_color, sign_color, position_ratio);
+                    
+                    it[baseIndex + segment] = segment_color;
+                  }
+                }
+              }
+            };
+
+            // Get current time
+            auto time = id(sntp_time).now();
+            int hours = time.hour;
+            int minutes = time.minute;
+            int seconds = time.second;
+
+            // Convert to 12-hour format
+            if (hours > 12) hours -= 12;
+            if (hours == 0) hours = 12;
+
+            // Display each digit of the time
+            displayDigit((hours < 10) ? -1 : hours / 10, 0);  // Hours tens (blank if single digit)
+            displayDigit(hours % 10, 1);  // Hours ones
+            displayDigit(minutes / 10, 2); // Minutes tens
+            displayDigit(minutes % 10, 3); // Minutes ones
+            displayDigit(seconds / 10, 4); // Seconds tens
+            displayDigit(seconds % 10, 5); // Seconds ones
+
+            // Handle colon LEDs with pulsing effect
+            static const int COLON_LEDS[] = {14, 16, 31, 33};
+            float brightness = (sin(millis() * M_PI / 1000.0f) + 1.0f) / 2.0f;
+            Color colon_color = Color(
+              sign_color.red * brightness,
+              sign_color.green * brightness,
+              sign_color.blue * brightness
+            );
+            
+            for (int i : COLON_LEDS) {
+              it[i] = colon_color;
+            }
+            it[15] = Color(0, 0, 0);  // Turn off middle LED of first colon
+            it[32] = Color(0, 0, 0);  // Turn off middle LED of second colon
+
