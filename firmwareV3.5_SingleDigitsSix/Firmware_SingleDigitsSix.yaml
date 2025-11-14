@@ -45,7 +45,16 @@ light:
           name: "Show Time"
           update_interval: 1000ms
           lambda: |-
-            static const Color sign_color =  Color(255, 0, 0);  // Cyan
+            // Define gradient colors - Pink to Light Blue
+            static const Color gradient_colors[7] = {
+              Color(255, 20, 147),   // Deep Pink (bottom segments)
+              Color(255, 69, 180),   // Pink
+              Color(255, 105, 200),  // Light Pink
+              Color(200, 162, 235),  // Lavender (middle)
+              Color(135, 206, 250),  // Light Sky Blue
+              Color(100, 220, 255),  // Light Blue
+              Color(173, 216, 230)   // Light Blue (top segments)
+            };
             
             auto displayDigit = [&](int digit, int displayUnit, int ledsPerDigit = 7) {
               // Calculate the starting LED index for this display unit
@@ -71,30 +80,11 @@ light:
                 {1, 1, 0, 1, 1, 1, 1}     // 9
               };
               
-              // Set the appropriate segments for the digit
+              // Set the appropriate segments for the digit with gradient colors
               if (digit >= 0 && digit <= 9) {
                 for (int segment = 0; segment < 7; segment++) {
                   if (SEGMENTS[digit][segment]) {
-                    switch(displayUnit) {
-                      case 0:
-                        it[baseIndex + segment] = sign_color;
-                        break;
-                      case 1:
-                        it[baseIndex + segment] =sign_color;
-                        break;
-                      case 2:
-                        it[baseIndex + segment] =  sign_color;
-                        break;
-                      case 3:
-                        it[baseIndex + segment] =  sign_color;
-                        break;
-                      case 4:
-                        it[baseIndex + segment] =  sign_color;
-                        break;
-                      case 5:
-                        it[baseIndex + segment] =  sign_color;
-                        break;
-                    }
+                    it[baseIndex + segment] = gradient_colors[segment];
                   }
                 }
               }
@@ -110,18 +100,25 @@ light:
             if (hours > 12) hours -= 12;
             if (hours == 0) hours = 12;
 
-            // Display each digit of the time
-            displayDigit(hours / 10, 0);  // Hours tens
+            // Display each digit of the time (skip leading zero for hours)
+            if (hours >= 10) {
+              displayDigit(hours / 10, 0);  // Hours tens (only if >= 10)
+            } else {
+              // Clear the first digit position completely for single-digit hours
+              for (int i = 0; i < 7; i++) {
+                it[i] = Color(0, 0, 0);
+              }
+            }
             displayDigit(hours % 10, 1);  // Hours ones
             displayDigit(minutes / 10, 2); // Minutes tens
             displayDigit(minutes % 10, 3); // Minutes ones
             displayDigit(seconds / 10, 4); // Seconds tens
             displayDigit(seconds % 10, 5); // Seconds ones
 
-            // Handle colon LEDs
+            // Handle colon LEDs with gradient color (middle segment color)
             static const int COLON_LEDS[] = {14, 16, 31, 33};
             for (int i : COLON_LEDS) {
-              it[i] = sign_color;
+              it[i] = gradient_colors[3]; // Use middle gradient color for colons
             }
             it[15] = Color(0, 0, 0);  // Turn off middle LED of first colon
             it[32] = Color(0, 0, 0);  // Turn off middle LED of second colon
