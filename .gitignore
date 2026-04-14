@@ -1,4 +1,5 @@
 venv/
 .DS_Store
 **/secrets.yaml
+**/.esphome/
 firmwareV3.5_SingleDigitsSix/esphome_env/
