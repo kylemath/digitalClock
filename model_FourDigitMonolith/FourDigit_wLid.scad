@@ -5,17 +5,23 @@ strip_height = 2;      // Keep same
 tolerance = 0.8;       // Keep same
 led_size = 5;         // 5mm square LED cutouts
 
+// Strip channel retention: channel is wider at the floor and narrower at the top
+// to create a small overhang on each side that the LED strip snaps past.
+// Total reduction across the channel width at the top (so per-side overhang = strip_channel_taper / 2).
+// Keep this small (<= ~0.6) so the overhang prints cleanly as a short bridge.
+strip_channel_taper = 0.5;
+
 // Updated Base Parameters
 base_width = 39.5;      // Optimized smaller base
 base_length = 68;     // Adjusted proportionally
 base_height = 15;     // Increased by 25% from 25mm
 base_space = 4;
 // Updated 7-Segment Display Parameters
-segment_h_length = 24;    // Increased horizontal length for wider number
-segment_width = 6;        // Keep wider segments
+segment_h_length = 22;    // Increased horizontal length for wider number
+segment_width = 9;        // Keep wider segments
 
 // Add diffuser parameters
-diffuser_height = .56;
+diffuser_height = .60;
 
 // Add support parameters
 support_height = 8;        // Height from wall to LED strip
@@ -56,10 +62,10 @@ colon_led3 = [-.5 * led_spacing, -vertical_strip_offset];   // Third LED
 colon_led4 = [.5 * led_spacing, -vertical_strip_offset];  // Bottom LED
 
 // Define dot positions (positioned for visual appearance)
-colon_dot1 = [0, 16];      // Top dot
-colon_dot2 = [0, 0];       // Center dot
-colon_dot3 = [0, -16];     // Bottom dot
-colon_dot4 = [0, -29];     // Decimal - aligned with segment_d position
+colon_dot1 = [0, 22];      // Top dot
+colon_dot2 = [0, 4];       // Center dot
+colon_dot3 = [0, -11];     // Bottom dot
+colon_dot4 = [0, -28];     // Decimal - aligned with segment_d position
 
 // Add spacing for colon
 colon_spacing = base_width/2;  // Match the colon_depth
@@ -357,14 +363,14 @@ union() {
         }
     }
     
-    // Lid - back to original position beside clock
-        // translate([-base_length/2 - 5, 0, -20]) {  // Position directly above clock
-    translate([base_length/2 + 5, 0, side_wall_height/2 - lid_height + 1]) {
-        rotate([180, 0, 0])  // Flip upside down
-        color("Blue", alpha=0.3) {
-            back_lid();
-        }
-    }
+    // // Lid - back to original position beside clock
+    //     // translate([-base_length/2 - 5, 0, -20]) {  // Position directly above clock
+    // translate([base_length/2 + 5, 0, side_wall_height/2 - lid_height + 1]) {
+    //     rotate([180, 0, 0])  // Flip upside down
+    //     color("Blue", alpha=0.3) {
+    //         back_lid();
+    //     }
+    // }
 }
 
 // Use the cropped version with your transformations
@@ -405,13 +411,52 @@ module single_digit(offset_y = 0) {
 }
 
 // LED Strip Channel with wire channels - centered
+// Channels are tapered (wider at floor, narrower at top) so the LED strip snaps
+// past a small lip on each side and is held against the channel floor.
 module led_channels() {
-    // Main channel exactly 10mm wide plus tolerance
-    translate([ vertical_strip_offset-strip_width/2 - tolerance/2, -base_width/2 ,-base_height/2])
-        cube([ strip_width + tolerance, base_width, strip_height + tolerance]);
-            // Main channel exactly 10mm wide plus tolerance
-    translate([ -vertical_strip_offset-strip_width/2 - tolerance/2, -base_width/2 ,-base_height/2])
-        cube([ strip_width + tolerance, base_width, strip_height + tolerance]);
+    tapered_strip_channel(vertical_strip_offset);
+    tapered_strip_channel(-vertical_strip_offset);
+}
+
+// Single tapered LED strip channel cutout, centered on x = x_center, running along Y.
+//
+// The model's z = -base_height/2 face is what gets printed as the FLAT BOTTOM,
+// and the LED strip is inserted from that face after flipping the print over.
+// So that face is the "entry" and we want it NARROWER (the retaining lips).
+// The deeper end of the channel (higher z in model space) is where the strip
+// rests once snapped in, so we want that WIDER.
+//
+// entry_w  - width at the print's external face (the entry opening, narrower) -> model z_floor
+// inside_w - width at the deepest point of the channel (where the strip seats, wider) -> model z_open
+module tapered_strip_channel(x_center) {
+    inside_w = strip_width + tolerance;                       // wide end (where strip seats)
+    entry_w  = strip_width + tolerance - strip_channel_taper; // narrow end (retaining lips)
+    z_entry  = -base_height/2;                                // print's bottom face
+    z_inside = z_entry + strip_height + tolerance;            // deepest point in the model
+
+    hull() {
+        // Entry opening at the print's bottom face - narrower (retaining lips)
+        translate([x_center - entry_w/2, -base_width/2, z_entry])
+            cube([entry_w, base_width, 0.01]);
+        // Deep end of the channel - full width so the strip can sit flat
+        translate([x_center - inside_w/2, -base_width/2, z_inside])
+            cube([inside_w, base_width, 0.01]);
+    }
+}
+
+// Same as tapered_strip_channel but sized for the colon block (uses colon_depth/colon_height).
+module tapered_colon_strip_channel(x_center) {
+    inside_w = strip_width + tolerance;
+    entry_w  = strip_width + tolerance - strip_channel_taper;
+    z_entry  = -colon_height/2;
+    z_inside = z_entry + strip_height + tolerance;
+
+    hull() {
+        translate([x_center - entry_w/2, -colon_depth/2, z_entry])
+            cube([entry_w, colon_depth, 0.01]);
+        translate([x_center - inside_w/2, -colon_depth/2, z_inside])
+            cube([inside_w, colon_depth, 0.01]);
+    }
 }
 
 // Single light pipe cavity with elongating shape
@@ -444,15 +489,26 @@ module light_cavity(led_pos, segment_pos, is_horizontal=false, is_center=false) 
 
 
 // Update colon cavity module
+// Matches the digit light_cavity LED end exactly: a parallel-walled
+// (led_size + tolerance) "well" sitting on top of the strip channel,
+// then a hull tapering up to the dot opening.
 module colon_cavity(led_pos, dot_pos) {
     z_bottom = -colon_height/2 + strip_height;
     z_top = colon_height/2;
-    
+
+    // Straight-walled well at the LED (same as digits) - 5.8 x 5.8 mm
+    translate([led_pos[0] - (led_size + tolerance)/2,
+              led_pos[1] - (led_size + tolerance)/2,
+              z_bottom])
+        cube([led_size + tolerance, led_size + tolerance, 2]);
+
     hull() {
-        // Bottom (at LED) - small square
-        translate([led_pos[0] - led_size/2, led_pos[1] - led_size/2, z_bottom])
+        // Bottom of the hull starts above the well, same footprint as the digit version
+        translate([led_pos[0] - led_size/2,
+                  led_pos[1] - led_size/2,
+                  z_bottom + 2])
             cube([led_size, led_size, 2]);
-            
+
         // Top (at dot) - circular dot
         translate([dot_pos[0], dot_pos[1], z_top]) {
             linear_extrude(height=.1)
@@ -467,12 +523,9 @@ module colon_base() {
         // Main block
         cube([colon_width, colon_depth, colon_height], center=true);
         
-        // LED channel
-        translate([ vertical_strip_offset-strip_width/2 - tolerance/2, -colon_depth/2, -colon_height/2])
-            cube([ strip_width + tolerance, colon_depth, strip_height + tolerance]);
-                 // LED channel
-        translate([ -vertical_strip_offset-strip_width/2 - tolerance/2, -colon_depth/2, -colon_height/2])
-            cube([ strip_width + tolerance, colon_depth, strip_height + tolerance]);
+        // Tapered LED channels (same retention lips as digits)
+        tapered_colon_strip_channel(vertical_strip_offset);
+        tapered_colon_strip_channel(-vertical_strip_offset);
             
         // Light cavities for all dots
         rotate([0, 0, 90]) {
